@@ -2,8 +2,8 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #0d0d0d; /* Darker background */
-  color: #e6e6e6;
+  background-color: #061116; /* Dark base color */
+  color: #c0c0c0; /* Silver text color */
   line-height: 1.6;
 }
 
@@ -21,15 +21,16 @@ a {
 
 /* Header / Hero */
 header {
-  background: linear-gradient(135deg, #4b0082, #8a2be2);
+  background: #061116; 
   padding: 100px 0;
   text-align: center;
-  color: #fff;
+  color: #c0c0c0;
+  border-bottom: 2px solid #888; /* subtle silver border */
 }
 
 header h1 {
   font-size: 3em;
-  color: #ff77ff; /* Minecraft-style accent */
+  color: #e0e0e0; /* Silver accent */
   margin-bottom: 15px;
 }
 
@@ -43,32 +44,33 @@ header .logo {
   margin-bottom: 20px;
 }
 
+/* Buttons */
 .btn {
   display: inline-block;
   padding: 12px 30px;
-  background: #ff00ff;
-  color: #fff;
+  background: #c0c0c0; /* Silver button */
+  color: #061116;
   border-radius: 30px;
   transition: 0.3s;
   font-weight: bold;
 }
 
 .btn:hover {
-  background: #e600e6;
+  background: #e0e0e0;
   transform: scale(1.05);
 }
 
 /* Plans Section */
 #plans {
   padding: 80px 0;
-  background: #121212;
+  background: #0b1a26; /* Slightly different dark shade */
   text-align: center;
 }
 
 #plans h2 {
   font-size: 2.5em;
   margin-bottom: 50px;
-  color: #ff77ff;
+  color: #c0c0c0;
 }
 
 .plans {
@@ -79,46 +81,48 @@ header .logo {
 }
 
 .plan {
-  background: #1a1a1a;
+  background: #061116;
   padding: 30px;
   border-radius: 15px;
   width: 300px;
   transition: 0.3s;
-  border: 2px solid #4b0082;
+  border: 2px solid #888; /* Silver border */
 }
 
 .plan:hover {
   transform: translateY(-10px);
-  border-color: #ff00ff;
+  border-color: #e0e0e0;
 }
 
 .plan h3 {
-  color: #ff00ff;
+  color: #e0e0e0;
   margin-bottom: 15px;
 }
 
 /* Contact Section */
 #contact {
   padding: 80px 0;
-  background: #0d0d0d;
+  background: #061116;
   text-align: center;
 }
 
 #contact h2 {
-  color: #ff77ff;
+  color: #c0c0c0;
   font-size: 2.5em;
   margin-bottom: 30px;
 }
 
 #contact a {
-  color: #ff00ff;
+  color: #c0c0c0;
   font-weight: bold;
+  border-bottom: 1px dotted #888;
 }
 
 /* Footer */
 footer {
-  background: #4b0082;
+  background: #061116;
   padding: 20px 0;
   text-align: center;
-  color: #fff;
+  color: #c0c0c0;
+  border-top: 2px solid #888;
 }
