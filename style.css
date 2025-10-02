@@ -26,7 +26,7 @@ body {
 }
 
 /* ---------------------------------------------------- */
-/* ANIMATED BACKGROUND (Cubes for non-hero sections) */
+/* ANIMATED BACKGROUND (Cubes for full page) */
 /* ---------------------------------------------------- */
 .animated-background {
     position: fixed; 
@@ -35,13 +35,12 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: -2; /* Ensure it's behind all content and the hero-background */
+    z-index: -2; 
     background-color: var(--color-primary);
 }
 
 .cube {
     position: absolute;
-    /* Cyan ke transparent cubes */
     background: rgba(0, 252, 227, 0.1); 
     border: 1px solid rgba(0, 252, 227, 0.3);
     animation: fall 20s infinite linear; 
@@ -64,7 +63,7 @@ body {
     }
 }
 
-/* Cube placement details (Adjusted for better coverage) */
+/* Cube placement details */
 .cube:nth-child(1) { left: 5%; width: 40px; height: 40px; animation-delay: 0s; animation-duration: 15s; }
 .cube:nth-child(2) { left: 15%; width: 60px; height: 60px; animation-delay: 2s; animation-duration: 18s; }
 .cube:nth-child(3) { left: 25%; width: 30px; height: 30px; animation-delay: 4s; animation-duration: 10s; }
@@ -75,7 +74,6 @@ body {
 .cube:nth-child(8) { left: 75%; width: 35px; height: 35px; animation-delay: 3s; animation-duration: 14s; }
 .cube:nth-child(9) { left: 85%; width: 65px; height: 65px; animation-delay: 5s; animation-duration: 19s; }
 .cube:nth-child(10) { left: 95%; width: 40px; height: 40px; animation-delay: 7s; animation-duration: 11s; }
-/* Agar aap 15 cubes add karte hain index.html mein, toh yeh 5 extra kaam aayenge */
 .cube:nth-child(11) { left: 10%; width: 75px; height: 75px; animation-delay: 12s; animation-duration: 22s; }
 .cube:nth-child(12) { left: 30%; width: 30px; height: 30px; animation-delay: 14s; animation-duration: 13s; }
 .cube:nth-child(13) { left: 50%; width: 55px; height: 55px; animation-delay: 9s; animation-duration: 25s; }
@@ -164,22 +162,20 @@ nav a:hover {
     overflow: hidden;
 }
 
-/* HERO BACKGROUND: Fixed image/color wapis set kiya (Animation ko chhupane ke liye z-index: 1) */
+/* HERO BACKGROUND: Grey background removed. Now only Animated Cubes are visible. */
 .hero-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* Original background placeholder: aap yahan apni image daal sakte hain */
-    background: url('images/hero_bg_effect.png') no-repeat center center/cover;
-    background-color: #1a1a1a; 
-    opacity: 0.8; 
-    z-index: 1; /* Animation (z-index: -2) ke upar dikhega */
+    /* Background properties removed. Only transparent left. */
+    background-color: transparent; 
+    z-index: 1; 
 }
 
 .hero-content {
-    z-index: 2; /* Content sabse upar rahega */
+    z-index: 2; 
     text-align: center;
 }
 
@@ -211,15 +207,15 @@ nav a:hover {
 }
 
 .button-accent {
-    background-color: var(--color-accent); /* CYAN BUTTON */
-    color: var(--color-primary); /* Text Black */
+    background-color: var(--color-accent); 
+    color: var(--color-primary); 
     margin-right: 20px;
     padding: 15px 35px; 
     border: none;
 }
 
 .button-accent:hover {
-    background-color: #33fffa; /* Light Cyan Hover */
+    background-color: #33fffa; 
     transform: translateY(-2px);
 }
 
@@ -238,8 +234,8 @@ nav a:hover {
 .small-button {
     display: inline-block;
     padding: 8px 15px;
-    background-color: var(--color-accent); /* CYAN Small Button */
-    color: var(--color-primary); /* Text Black */
+    background-color: var(--color-accent); 
+    color: var(--color-primary); 
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -248,8 +244,8 @@ nav a:hover {
 }
 
 /* SERVICES/FEATURES CARD STYLES */
+/* Sections transparent rakhe taaki animated cubes dikhein */
 .services, .pricing, .contact {
-    /* Sections transparent rakhe taaki animated cubes dikhein */
     background-color: transparent; 
 }
 
@@ -266,7 +262,7 @@ nav a:hover {
     padding: 30px;
     border-radius: 8px;
     text-align: left;
-    border-top: 3px solid var(--color-accent); /* CYAN Border */
+    border-top: 3px solid var(--color-accent); 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
@@ -287,7 +283,7 @@ nav a:hover {
 }
 
 .pricing-cards .service-card h3 {
-    color: var(--color-accent) !important; /* Plans Headings CYAN */
+    color: var(--color-accent) !important; 
     text-align: center;
 }
 
