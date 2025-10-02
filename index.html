@@ -4,12 +4,672 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BadmoshNodes - Powering Your Pixel Worlds</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="script.js" defer></script>
+    
+    <!-- Inline CSS for Futuristic Neon Design -->
+    <style>
+        /* FUTURISTIC GLOBAL STYLES */
+        :root {
+            --color-bg-dark: #0A0A0A; /* Deeper Black */
+            --color-bg-light: #1A1A1A;
+            --color-accent-cyan: #00FCE3; /* Bright Cyan */
+            --color-text-light: #E0E0E0; /* Off-white for readability */
+            --color-border-glow: rgba(0, 252, 227, 0.4);
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+            --spacing-lg: 120px 0;
+            --spacing-md: 80px 0;
+            --card-bg-opacity: 0.15; /* For frosted glass effect */
+            --header-height: 80px; /* Defined header height for padding calculation */
+        }
+
+        /* Base Reset & Typography */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: overflow 0.3s; /* Smooth transition when disabling scroll */
+        }
+        
+        /* KEY CHANGE: Disable scrolling when the plan overlay is active */
+        body.overlay-active {
+            overflow: hidden; 
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .section {
+            padding: var(--spacing-lg);
+            text-align: center;
+            position: relative;
+            z-index: 10; 
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--color-accent-cyan);
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            color: var(--color-text-light); 
+            /* Main Glow Effect */
+            text-shadow: 0 0 15px rgba(0, 252, 227, 0.6), 0 0 25px rgba(0, 252, 227, 0.3); 
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(0, 252, 227, 0.5);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: rgba(224, 224, 224, 0.8);
+            max-width: 800px;
+            margin: -20px auto 60px auto;
+        }
+        
+        /* ---------------------------------------------------- */
+        /* FULL-SCREEN PLANS OVERLAY (THE "SEPARATE PAGE") */
+        /* ---------------------------------------------------- */
+        #plans-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--color-bg-dark); /* Solid background to cover content */
+            z-index: 1500; /* Above header and all content */
+            display: none; /* Hidden by default */
+            overflow-y: auto; /* Allow internal scrolling if content is too long on small screens */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-top: var(--header-height); /* Space for the fixed header */
+            text-align: center;
+        }
+        
+        /* Content within the overlay */
+        #plans-overlay .container {
+            min-height: calc(100vh - var(--header-height));
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+        /* ---------------------------------------------------- */
+
+
+        /* ---------------------------------------------------- */
+        /* FUTURISTIC ANIMATED BACKGROUND */
+        /* ---------------------------------------------------- */
+        .futuristic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; 
+            background: radial-gradient(circle at center, #0F1E2A 0%, #0A0A0A 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 252, 227, 0.2), rgba(0, 252, 227, 0));
+            animation: orb-movement 30s infinite ease-in-out alternate;
+            filter: blur(15px);
+            opacity: 0.6;
+        }
+
+        .orb:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 10%; animation-delay: 0s; }
+        .orb:nth-child(2) { width: 400px; height: 400px; bottom: 5%; right: 15%; animation-delay: 10s; }
+        .orb:nth-child(3) { width: 250px; height: 250px; top: 50%; left: 40%; animation-delay: 20s; }
+
+        @keyframes orb-movement {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            25% { transform: translate(20vw, 10vh) scale(1.1); opacity: 0.7; }
+            50% { transform: translate(-15vw, 25vh) scale(0.9); opacity: 0.5; }
+            75% { transform: translate(10vw, -20vh) scale(1.2); opacity: 0.8; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+        }
+
+        .line-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                linear-gradient(0deg, rgba(0, 252, 227, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 252, 227, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-pan 60s linear infinite;
+            opacity: 0.3;
+        }
+
+        .line-grid.delay-1 { animation-delay: -20s; opacity: 0.2; background-size: 70px 70px; }
+        .line-grid.delay-2 { animation-delay: -40s; opacity: 0.1; background-size: 90px 90px; }
+
+        @keyframes grid-pan {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50%, -50%); }
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* HEADER & NAVIGATION */
+        /* ---------------------------------------------------- */
+        #header {
+            background-color: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(8px); 
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 252, 227, 0.2);
+            padding: 15px 0;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+
+        #header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .futuristic-logo .logo-text {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--color-accent-cyan);
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 252, 227, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .futuristic-logo .logo-text:hover {
+            color: var(--color-text-light);
+            text-shadow: 0 0 15px var(--color-accent-cyan);
+        }
+
+        .futuristic-nav .nav-link {
+            color: var(--color-text-light);
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 1.05rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .futuristic-nav .nav-link:hover {
+            color: var(--color-accent-cyan);
+            text-shadow: 0 0 8px rgba(0, 252, 227, 0.7);
+        }
+
+        .futuristic-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-accent-cyan);
+            left: 50%;
+            bottom: -8px;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .futuristic-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* HERO SECTION */
+        /* ---------------------------------------------------- */
+        .hero {
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 0; 
+            background: transparent; 
+        }
+
+        .hero-content {
+            z-index: 20; 
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--color-text-light);
+            margin-top: -10px;
+            margin-bottom: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .futuristic-button {
+            display: inline-block;
+            padding: 18px 45px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 20px 25px 0 25px;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-family: var(--font-heading);
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            cursor: pointer; /* Add pointer for buttons */
+        }
+
+        .button-accent {
+            background-color: var(--color-accent-cyan);
+            color: var(--color-bg-dark);
+            border-color: var(--color-accent-cyan);
+        }
+
+        .button-accent:hover {
+            background-color: transparent;
+            color: var(--color-accent-cyan);
+            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.5);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .button-secondary {
+            background-color: var(--color-bg-light);
+            color: var(--color-accent-cyan);
+            border-color: var(--color-accent-cyan);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--color-accent-cyan);
+            color: var(--color-bg-dark);
+            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.5);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* FEATURES SECTION - FROSTED GLASS CARDS */
+        /* ---------------------------------------------------- */
+        .features {
+            background: transparent; 
+            padding: var(--spacing-lg);
+        }
+
+        .grid-futuristic {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card, .pricing-card {
+            background: rgba(0, 0, 0, var(--card-bg-opacity)); 
+            backdrop-filter: blur(8px);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--color-border-glow);
+            box-shadow: 0 0 20px rgba(0, 252, 227, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none; 
+            color: inherit;
+            cursor: pointer;
+            display: flex; 
+            flex-direction: column;
+            justify-content: space-between; 
+        }
+
+        .feature-card::before, .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 252, 227, 0.05) 0%, transparent 70%);
+            animation: rotate-glow 10s linear infinite;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before, .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rotate-glow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+
+        .feature-card:hover, .pricing-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 35px var(--color-accent-cyan), 0 0 50px rgba(0, 252, 227, 0.4);
+            border-color: var(--color-accent-cyan);
+        }
+
+        .card-title {
+            color: var(--color-accent-cyan);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-family: var(--font-heading);
+            text-shadow: 0 0 5px rgba(0, 252, 227, 0.5);
+        }
+
+        .card-description {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-icon {
+            font-size: 3rem; 
+            margin-top: 15px;
+            display: block;
+            color: var(--color-accent-cyan);
+            text-shadow: 0 0 10px rgba(0, 252, 227, 0.8);
+            line-height: 1; 
+        }
+
+        .futuristic-link-button {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--color-accent-cyan);
+            color: var(--color-bg-dark);
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-accent-cyan);
+            text-transform: uppercase;
+            font-family: var(--font-heading);
+            cursor: pointer;
+        }
+
+        .futuristic-link-button:hover {
+            background-color: transparent;
+            color: var(--color-accent-cyan);
+            box-shadow: 0 0 15px var(--color-accent-cyan);
+            transform: translateY(-3px);
+        }
+
+        /* ---------------------------------------------------- */
+        /* PRICING SECTION - Main Node Grid Styles */
+        /* ---------------------------------------------------- */
+        .pricing {
+            background: transparent; 
+            padding: var(--spacing-lg);
+        }
+
+        .pricing-grid {
+            margin-top: 60px;
+        }
+
+        .pricing-card .card-title {
+            font-size: 2rem; 
+        }
+
+        .pricing-card .card-description {
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background-color: var(--color-accent-cyan);
+            color: var(--color-bg-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(0, 252, 227, 0.7);
+        }
+
+        /* Styles for the detail view plans within the overlay */
+        #plans-detail-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        #detail-plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        #detail-plan-grid .pricing-card {
+            padding: 30px;
+        }
+        
+        #detail-plan-grid .pricing-card .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        #detail-plan-grid .pricing-card .card-tag {
+            margin-bottom: 0;
+            display: block; 
+            margin-top: -10px;
+        }
+        #detail-plan-grid .pricing-card:hover {
+            transform: translateY(-5px) scale(1.01); 
+            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.4);
+        }
+        
+        .plan-details {
+            text-align: left;
+            margin: 20px 0 30px;
+            flex-grow: 1; 
+        }
+
+        .plan-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .plan-details ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: rgba(224, 224, 224, 0.8);
+        }
+
+        .plan-details ul li::before {
+            content: '✓'; 
+            color: var(--color-accent-cyan);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* CONTACT SECTION */
+        /* ---------------------------------------------------- */
+        .contact {
+            background: transparent; 
+            padding: var(--spacing-lg);
+        }
+
+        .futuristic-form {
+            max-width: 700px;
+            margin: 60px auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+            background: rgba(0, 0, 0, var(--card-bg-opacity));
+            backdrop-filter: blur(8px);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border-glow);
+            box-shadow: 0 0 25px rgba(0, 252, 227, 0.15);
+        }
+
+        .futuristic-form input[type="text"],
+        .futuristic-form input[type="email"],
+        .futuristic-form textarea {
+            padding: 18px;
+            border: 1px solid rgba(0, 252, 227, 0.3);
+            background-color: rgba(0, 0, 0, 0.3); 
+            color: var(--color-text-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .futuristic-form input::placeholder,
+        .futuristic-form textarea::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+            opacity: 0.7;
+        }
+
+        .futuristic-form input:focus,
+        .futuristic-form textarea:focus {
+            border-color: var(--color-accent-cyan);
+            outline: none;
+            box-shadow: 0 0 10px var(--color-accent-cyan);
+        }
+
+        .futuristic-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* ---------------------------------------------------- */
+        /* FOOTER */
+        /* ---------------------------------------------------- */
+        .futuristic-footer {
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--color-bg-light); 
+            border-top: 1px solid rgba(0, 252, 227, 0.2);
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        /* ---------------------------------------------------- */
+        /* UTILITY / SCROLL ANIMATIONS */
+        /* ---------------------------------------------------- */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-in.delay-1 { transition-delay: 0.1s; }
+        .animate-in.delay-2 { transition-delay: 0.2s; }
+        .animate-in.delay-3 { transition-delay: 0.3s; }
+        .animate-in.delay-4 { transition-delay: 0.4s; }
+
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* RESPONSIVE DESIGN */
+        /* ---------------------------------------------------- */
+        @media (max-width: 1024px) {
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2.2rem; }
+            .futuristic-nav .nav-link { margin-left: 20px; }
+            .futuristic-button { padding: 15px 30px; margin: 15px 15px 0 15px; }
+            .section-subtitle { margin-bottom: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            h3 { font-size: 1.4rem; }
+            .section-subtitle { font-size: 1rem; margin-bottom: 30px; }
+            #header .container { flex-direction: column; padding: 15px 20px; }
+            .futuristic-nav { margin-top: 15px; }
+            .futuristic-nav .nav-link { margin: 0 10px; font-size: 0.9rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .futuristic-button { width: 90%; margin: 10px 0; }
+            .grid-futuristic { gap: 25px; margin-top: 40px; }
+            .feature-card, .pricing-card, .futuristic-form { padding: 30px; }
+            .futuristic-logo .logo-text { font-size: 1.5rem; }
+            .section { padding: var(--spacing-md); }
+            
+            #plans-overlay .container {
+                justify-content: flex-start; /* Push content up on small screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.6rem; }
+            .futuristic-nav .nav-link { margin: 0 5px; font-size: 0.85rem; }
+            .futuristic-logo .logo-text { font-size: 1.3rem; }
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Animated Futuristic Background -->
     <div class="futuristic-background">
         <div class="orb"></div>
         <div class="orb"></div>
@@ -19,34 +679,40 @@
         <div class="line-grid delay-2"></div>
     </div>
     
+    <!-- Header/Navigation Bar -->
     <header id="header">
         <div class="container">
             <a href="#home" class="logo futuristic-logo">
                 <span class="logo-text">BadmoshNodes</span> 
             </a>
-            <nav class="futuristic-nav">
+            <nav class="futuristic-nav" id="main-nav">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#features" class="nav-link">Features</a>
-                <a href="#pricing" class="nav-link">Pricing</a>
+                <!-- Discord link added as requested -->
+                <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="nav-link">Discord</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </nav>
         </div>
     </header>
 
+    <!-- Hero Section -->
     <section id="home" class="section hero futuristic-section">
         <div class="container hero-content">
             <div class="hero-text-area">
-                <h1 class="animate-in delay-1">POWERING YOUR PIXEL WORLDS: <br>LAG-FREE, SECURE, INSTANT.</h1>
+                <h1 class="animate-in delay-1">POWERING YOUR PIXEL WORLDS <br>LAG-FREE SECURE INSTANT</h1>
                 <p class="hero-subtitle animate-in delay-2">Get your high-performance server online in minutes with BadmoshNodes.</p>
                 
                 <div class="hero-buttons">
+                    <!-- Button links to the pricing section -->
                     <a href="#pricing" class="button futuristic-button button-accent animate-in delay-3">EXPLORE PLANS</a>
-                    <a href="#contact" class="button futuristic-button button-secondary animate-in delay-4">JOIN COMMUNITY</a>
+                    <!-- JOIN COMMUNITY link updated with Discord URL and target="_blank" -->
+                    <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="button futuristic-button button-secondary animate-in delay-4">JOIN COMMUNITY</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Features Section -->
     <section id="features" class="section features futuristic-section">
         <div class="container">
             <h2 class="animate-in">ADVANCED FEATURES FOR SERIOUS GAMERS</h2>
@@ -73,52 +739,67 @@
                     <p class="card-description">Experience smooth, high-performance gameplay on our premium optimized hardware.</p>
                     <span class="card-icon">🚀</span>
                 </div>
+                <!-- ADVANCED PANEL card updated with external link and target="_blank" -->
                 <div class="feature-card animate-in delay-1">
                     <h3 class="card-title">ADVANCED PANEL</h3>
                     <p class="card-description">Upgrade to our premium panel for advanced features, customizability, and priority support.</p>
-                    <a href="#" class="futuristic-link-button">ACCESS PANEL</a>
+                    <a href="https://panel.badmoshnodes.com" target="_blank" class="futuristic-link-button">ACCESS PANEL</a>
                     <span class="card-icon">⚙️</span>
                 </div>
-                <div class="feature-card animate-in delay-2">
-                    <h3 class="card-title">MODS & PLUGINS</h3>
-                    <p class="card-description">Easily install popular modpacks and plugins with our user-friendly control panel and extensive library.</p>
-                    <span class="card-icon">🧩</span>
-                </div>
             </div>
         </div>
     </section>
 
+    <!-- Pricing/Nodes Section (Only shows main node cards) -->
     <section id="pricing" class="section pricing futuristic-section">
         <div class="container">
-            <h2 class="animate-in">CHOOSE YOUR NODE. CHOOSE YOUR DOMAIN.</h2>
+            <h2 class="animate-in">CHOOSE YOUR NODE CHOOSE YOUR DOMAIN</h2>
             <p class="section-subtitle animate-in delay-1">Select the region closest to you for the lowest latency and best performance.</p>
             
-            <div class="grid-futuristic pricing-grid">
+            <!-- Main Node Grid -->
+            <div class="grid-futuristic pricing-grid" id="main-pricing-grid">
                 
-                <a href="#" class="pricing-card animate-in">
-                    <h3 class="card-title">INDIA NODE</h3>
-                    <p class="card-description">High-speed hosting perfect for players in India and surrounding regions.</p>
-                    <span class="card-tag">LOW LATENCY</span>
-                    <div class="futuristic-link-button">VIEW PLANS</div>
+                <!-- INDIA NODE: Calls showPlans('india') -->
+                <a href="#" onclick="showPlans('india'); return false;" class="pricing-card animate-in">
+                    <div> <!-- Container for Title and Description (Top Content) -->
+                        <h3 class="card-title">INDIA NODE</h3>
+                        <p class="card-description">High-speed hosting perfect for players in India and surrounding regions.</p>
+                    </div>
+                    <div> <!-- Container for Tag and Button (Bottom Content) -->
+                        <span class="card-tag">LOW LATENCY</span>
+                        <div class="futuristic-link-button">VIEW PLANS</div>
+                    </div>
                 </a>
                 
+                <!-- GERMANY NODE (Placeholder for future plan detail) -->
                 <a href="#" class="pricing-card animate-in delay-1">
-                    <h3 class="card-title">GERMANY NODE</h3>
-                    <p class="card-description">Premium European hosting with robust DDoS protection and low EU latency.</p>
-                    <span class="card-tag">EU OPTIMIZED</span>
-                    <div class="futuristic-link-button">VIEW PLANS</div>
+                    <div>
+                        <h3 class="card-title">GERMANY NODE</h3>
+                        <p class="card-description">Premium European hosting with robust DDoS protection and low EU latency.</p>
+                    </div>
+                    <div>
+                        <span class="card-tag">EU OPTIMIZED</span>
+                        <div class="futuristic-link-button">VIEW PLANS</div>
+                    </div>
                 </a>
                 
+                <!-- SINGAPORE NODE (Placeholder for future plan detail) -->
                 <a href="#" class="pricing-card animate-in delay-2">
-                    <h3 class="card-title">SINGAPORE NODE</h3>
-                    <p class="card-description">Asia-Pacific hub for the best connectivity across Asia and Oceania.</p>
-                    <span class="card-tag">ASIA-PACIFIC</span>
-                    <div class="futuristic-link-button">VIEW PLANS</div>
+                    <div>
+                        <h3 class="card-title">SINGAPORE NODE</h3>
+                        <p class="card-description">Asia-Pacific hub for the best connectivity across Asia and Oceania.</p>
+                    </div>
+                    <div>
+                        <span class="card-tag">ASIA-PACIFIC</span>
+                        <div class="futuristic-link-button">VIEW PLANS</div>
+                    </div>
                 </a>
             </div>
+
         </div>
     </section>
 
+    <!-- Contact Section -->
     <section id="contact" class="section contact futuristic-section">
         <div class="container">
             <h2 class="animate-in">CONNECT WITH BADMOSHNODES</h2>
@@ -132,11 +813,171 @@
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="futuristic-footer">
         <div class="container">
             <p>&copy; 2025 BadmoshNodes - ALL PROTOCOLS RESERVED.</p>
         </div>
     </footer>
+    
+    <!-- FULL-SCREEN PLANS OVERLAY (THE NEW "PAGE") -->
+    <div id="plans-overlay">
+        <div class="container">
+            <!-- Back Button -->
+            <button onclick="showMainNodes()" class="futuristic-button button-secondary" style="margin-bottom: 40px; margin-top: 0; padding: 10px 30px;">
+                ← BACK TO NODES
+            </button>
 
+            <!-- Dynamic Title and Subtitle -->
+            <h2 id="detail-title" style="margin-top: 20px;"></h2>
+            <p id="detail-subtitle" class="section-subtitle" style="margin-bottom: 40px;"></p>
+
+            <!-- Plan Grid (Content injected by JavaScript) -->
+            <div class="grid-futuristic" id="detail-plan-grid">
+                <!-- Plans will be generated here -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Inline JavaScript for Scroll-based Animations and Dynamic Content -->
+    <script>
+        // Data structure containing plan details for each node
+        const nodeData = {
+            india: {
+                title: "INDIA NODE - PERFORMANCE TIERS",
+                subtitle: "Experience ultra-low latency. Choose the plan that suits your community size.",
+                plans: [
+                    { 
+                        name: "BUDGET PLAN", 
+                        tag: "EFFICIENT", 
+                        price: "₹399/mo",
+                        features: ["2 GB RAM", "2 CPU Cores", "20 GB NVMe Storage", "Standard DDoS Protection", "Instant Setup"]
+                    },
+                    { 
+                        name: "PREMIUM PLAN", 
+                        tag: "BALANCED", 
+                        price: "₹799/mo",
+                        features: ["4 GB RAM", "4 CPU Cores (Dedicated)", "40 GB NVMe Storage", "Enhanced DDoS Protection", "Priority Support"]
+                    },
+                    { 
+                        name: "ULTRA PLAN", 
+                        tag: "EXTREME POWER", 
+                        price: "₹1499/mo",
+                        features: ["8 GB RAM", "6 CPU Cores (Dedicated)", "80 GB NVme Storage", "Enterprise DDoS Protection", "24/7 VIP Support"]
+                    }
+                ]
+            }
+            // Mock plans for other nodes have been removed as requested.
+        };
+
+        // DOM Elements
+        const mainGrid = document.getElementById('main-pricing-grid');
+        const plansOverlay = document.getElementById('plans-overlay');
+        const detailTitle = document.getElementById('detail-title');
+        const detailSubtitle = document.getElementById('detail-subtitle');
+        const detailPlanGrid = document.getElementById('detail-plan-grid');
+        const body = document.body;
+
+        /**
+         * Switches the view to display detailed plans for the selected node in a full-screen overlay.
+         * @param {string} nodeKey - The key of the node (e.g., 'india').
+         */
+        function showPlans(nodeKey) {
+            const data = nodeData[nodeKey];
+
+            if (!data || data.plans.length === 0) {
+                // If no plans are defined, just log and exit or add a placeholder message
+                console.log(`No specific plans defined for ${nodeKey}.`);
+                // For demonstration, we'll alert if a node (like Germany) is clicked without data
+                if (nodeKey !== 'india') {
+                     // We only show a console message if the node is not India, since India has data
+                     console.log(`Plans for ${nodeKey.toUpperCase()} are coming soon!`);
+                }
+                return;
+            }
+
+            // 1. Update detail header
+            detailTitle.textContent = data.title;
+            detailSubtitle.textContent = data.subtitle;
+
+            // 2. Build plan cards
+            detailPlanGrid.innerHTML = data.plans.map(plan => {
+                const featuresList = plan.features.map(feature => `<li>${feature}</li>`).join('');
+
+                return `
+                    <div class="pricing-card animate-in">
+                        <div>
+                            <h3 class="card-title">${plan.name}</h3>
+                            <span class="card-tag">${plan.tag}</span>
+                            <div class="plan-details">
+                                <ul>
+                                    ${featuresList}
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size: 2.2rem; font-weight: bold; margin-bottom: 15px; color: var(--color-text-light);">${plan.price}</p>
+                            <!-- CHANGES: Button text is now 'VIEW' instead of 'PURCHASE NOW' -->
+                            <a href="#" class="futuristic-link-button button-accent" style="margin-top: 0;">VIEW</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 3. Switch view visibility and disable main page scroll
+            plansOverlay.style.display = 'block';
+            body.classList.add('overlay-active');
+            
+            // Scroll the overlay content to the top
+            plansOverlay.scrollTop = 0; 
+            
+            // Re-run animations for the newly visible content
+            setTimeout(runAnimations, 50); 
+        }
+
+        /**
+         * Switches the view back to the main three node cards and re-enables scrolling.
+         */
+        function showMainNodes() {
+            plansOverlay.style.display = 'none';
+            body.classList.remove('overlay-active');
+
+            // Scroll the main document back to the pricing section (optional, but good UX)
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+        // --------------------------------------------------------------------
+        // SCROLL ANIMATIONS LOGIC 
+        // --------------------------------------------------------------------
+        function runAnimations() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1 
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // Only trigger animation if element is not already visible
+                    if (entry.isIntersecting && !entry.target.classList.contains('is-visible')) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Select all animated elements in the current view
+            document.querySelectorAll('.animate-in').forEach(element => {
+                // Remove visible class only if we are not in the main document (i.e., we are in the overlay)
+                if (element.closest('#plans-overlay')) {
+                     element.classList.remove('is-visible'); 
+                }
+                observer.observe(element);
+            });
+        }
+        
+        // Initial setup for scroll animations
+        document.addEventListener('DOMContentLoaded', runAnimations);
+    </script>
 </body>
 </html>
