@@ -1,0 +1,215 @@
+:root {
+    --color-primary: #1a1a1a; /* Dark Black/Deep Gray */
+    --color-secondary: #c0c0c0; /* Silver for text and highlights */
+    --color-white: #ffffff;
+    --color-text: #ffffff;
+    --color-link: #ffffff; 
+    --color-accent: #3b82f6; /* A subtle blue accent for depth */
+    --padding-section: 100px 0;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll for animations */
+}
+
+/* Utility Class */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section {
+    padding: var(--padding-section);
+    text-align: center;
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+    color: var(--color-secondary); /* Silver Headings */
+}
+
+/* Header */
+#header {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark header */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+
+#header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a {
+    color: var(--color-link);
+    text-decoration: none;
+    margin-left: 25px;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--color-accent); /* Blue highlight on hover */
+}
+
+/* Button Styling (Areex-like rounded button) */
+.button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--color-secondary); /* Silver Button */
+    color: var(--color-primary);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background-color: var(--color-white); 
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Hero Section (Home) */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px; /* Space for fixed header */
+}
+
+.hero h1 {
+    font-size: 3rem;
+    max-width: 800px;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+    color: var(--color-secondary);
+}
+
+/* Services Section */
+.services {
+    background-color: #0d0d0d; /* Slightly lighter dark background for contrast */
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.service-card {
+    background-color: var(--color-primary);
+    padding: 30px;
+    border-radius: 8px;
+    text-align: left;
+    border-top: 3px solid var(--color-accent); /* Small blue highlight */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Contact Section */
+.contact form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.contact input[type="text"],
+.contact input[type="email"],
+.contact textarea {
+    padding: 15px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: var(--color-text);
+    border-radius: 5px;
+}
+
+.contact textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.contact button.button {
+    background-color: var(--color-accent); 
+    color: var(--color-white);
+}
+
+/* Footer */
+footer {
+    padding: 30px 0;
+    text-align: center;
+    background-color: #000;
+    border-top: 1px solid #333;
+}
+
+/* --- ANIMATION STYLES (Animations) --- */
+
+/* Base class for elements that will be animated */
+.animate-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Delay classes */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-4 { transition-delay: 0.4s; }
+
+/* Class added by JavaScript when element is visible */
+.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    nav a {
+        margin-left: 15px;
+    }
+}
