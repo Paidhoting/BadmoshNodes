@@ -1,35 +1,31 @@
-/* Style for small button inside the card */
-.small-button {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: var(--color-accent); /* Blue accent color */
-    color: var(--color-white);
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    transition: background-color 0.3s;
+/* Header Logo Styling */
+.header-logo {
+    height: 40px; /* Logo ki height adjust karein apni pasand se */
+    margin-right: 10px; /* Agar text bhi hai toh space ke liye */
+    vertical-align: middle; /* Text ke saath align karne ke liye */
+    transition: transform 0.3s ease;
 }
 
-.small-button:hover {
-    background-color: #5d9bff; /* Lighter blue on hover */
+.header-logo:hover {
+    transform: scale(1.05); /* Hover par thoda bada dikhe */
 }
 
-/* Service Card modifications for button placement */
-.service-card {
-    /* Existing styles, just for reference */
-    padding: 30px;
-    border-radius: 8px;
-    text-align: left;
-    border-top: 3px solid var(--color-accent); 
-    /* ... other styles ... */
-    
-    /* Ensure content is spaced well */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* To push the button down if needed */
+/* Nav links ko thoda adjust karein agar logo bada ho */
+#header nav a {
+    margin-left: 20px; /* Logo ke baad links ko thoda door karein */
 }
 
-.service-card h3 {
-    margin-top: 0;
+/* Agar aap sirf logo use kar rahe hain, toh .logo text ko hata sakte hain */
+.logo {
+    display: flex; /* Logo aur text ko ek line mein laane ke liye */
+    align-items: center; /* Vertically center karne ke liye */
+    text-decoration: none; /* Underline hatane ke liye */
+    color: silver; /* Agar logo ke saath text bhi dikhana hai */
+    font-size: 1.5rem; /* Text size adjust karein */
+    font-weight: bold;
+}
+
+/* Agar aap chahte hain ki logo ke saath sirf image dikhe, text nahi */
+.logo .header-logo {
+    margin-right: 0; /* No space if no text */
 }
