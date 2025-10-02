@@ -4,8 +4,8 @@
     --color-white: #ffffff;
     --color-text: #ffffff; 
     --color-link: #ffffff; 
-    --color-accent: #00fce3; /* **CYAN: Main Accent Color** */
-    --color-pink: #ffffff; /* Iski zarurat nahi, but white rakha */
+    --color-accent: #00fce3; /* CYAN: Main Accent Color */
+    --color-pink: #ffffff; 
     --padding-section: 100px 0;
 }
 
@@ -22,53 +22,65 @@ body {
     color: var(--color-text);
     line-height: 1.6;
     overflow-x: hidden;
-    position: relative; /* Animation ke liye */
+    position: relative; 
 }
 
-/* ANIMATED BACKGROUND (Minecraft-like cubes) */
+/* ---------------------------------------------------- */
+/* ANIMATED BACKGROUND (Minecraft-like cubes) FULL COVERAGE */
+/* ---------------------------------------------------- */
 .animated-background {
-    position: fixed; /* Poore viewport par */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: -1; /* Content ke peeche rakhein */
-    background-color: var(--color-primary); /* Base black background */
+    z-index: -1; 
+    background-color: var(--color-primary);
 }
 
 .cube {
     position: absolute;
-    background: rgba(0, 252, 227, 0.1); /* Cyan ke transparent cubes */
+    /* Cyan ke transparent cubes */
+    background: rgba(0, 252, 227, 0.1); 
     border: 1px solid rgba(0, 252, 227, 0.3);
-    animation: fall 15s infinite linear; /* Fall animation */
+    animation: fall 20s infinite linear; /* Duration badhai for smoother, wider fall */
 }
 
 @keyframes fall {
     0% {
-        transform: translateY(-100px) rotate(0deg);
+        transform: translateY(-20vh) rotate(0deg); /* Screen ke upar se shuru */
         opacity: 0;
     }
     10% {
-        opacity: 1;
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
     }
     100% {
-        transform: translateY(120vh) rotate(360deg);
+        transform: translateY(120vh) rotate(360deg); /* Screen ke neeche tak jaana */
         opacity: 0;
     }
 }
 
 /* Cubes ke alag-alag sizes, positions, aur delay */
-.cube:nth-child(1) { left: 20%; width: 40px; height: 40px; animation-delay: 0s; animation-duration: 10s; }
-.cube:nth-child(2) { left: 55%; width: 60px; height: 60px; animation-delay: 2s; animation-duration: 12s; }
-.cube:nth-child(3) { left: 80%; width: 30px; height: 30px; animation-delay: 4s; animation-duration: 8s; }
-.cube:nth-child(4) { left: 10%; width: 50px; height: 50px; animation-delay: 6s; animation-duration: 14s; }
-.cube:nth-child(5) { left: 70%; width: 70px; height: 70px; animation-delay: 8s; animation-duration: 16s; }
-.cube:nth-child(6) { left: 30%; width: 25px; height: 25px; animation-delay: 10s; animation-duration: 9s; }
-.cube:nth-child(7) { left: 45%; width: 45px; height: 45px; animation-delay: 1s; animation-duration: 11s; }
-.cube:nth-child(8) { left: 90%; width: 35px; height: 35px; animation-delay: 3s; animation-duration: 13s; }
-.cube:nth-child(9) { left: 5%; width: 65px; height: 65px; animation-delay: 5s; animation-duration: 15s; }
-.cube:nth-child(10) { left: 60%; width: 40px; height: 40px; animation-delay: 7s; animation-duration: 10s; }
+/* Total 15 cubes add kiye hain taaki screen poori tarah cover ho */
+.cube:nth-child(1) { left: 5%; width: 40px; height: 40px; animation-delay: 0s; animation-duration: 15s; }
+.cube:nth-child(2) { left: 15%; width: 60px; height: 60px; animation-delay: 2s; animation-duration: 18s; }
+.cube:nth-child(3) { left: 25%; width: 30px; height: 30px; animation-delay: 4s; animation-duration: 10s; }
+.cube:nth-child(4) { left: 35%; width: 50px; height: 50px; animation-delay: 6s; animation-duration: 20s; }
+.cube:nth-child(5) { left: 45%; width: 70px; height: 70px; animation-delay: 8s; animation-duration: 16s; }
+.cube:nth-child(6) { left: 55%; width: 25px; height: 25px; animation-delay: 10s; animation-duration: 12s; }
+.cube:nth-child(7) { left: 65%; width: 45px; height: 45px; animation-delay: 1s; animation-duration: 17s; }
+.cube:nth-child(8) { left: 75%; width: 35px; height: 35px; animation-delay: 3s; animation-duration: 14s; }
+.cube:nth-child(9) { left: 85%; width: 65px; height: 65px; animation-delay: 5s; animation-duration: 19s; }
+.cube:nth-child(10) { left: 95%; width: 40px; height: 40px; animation-delay: 7s; animation-duration: 11s; }
+.cube:nth-child(11) { left: 10%; width: 75px; height: 75px; animation-delay: 12s; animation-duration: 22s; }
+.cube:nth-child(12) { left: 30%; width: 30px; height: 30px; animation-delay: 14s; animation-duration: 13s; }
+.cube:nth-child(13) { left: 50%; width: 55px; height: 55px; animation-delay: 9s; animation-duration: 25s; }
+.cube:nth-child(14) { left: 70%; width: 40px; height: 40px; animation-delay: 16s; animation-duration: 17s; }
+.cube:nth-child(15) { left: 90%; width: 50px; height: 50px; animation-delay: 18s; animation-duration: 21s; }
 
 
 .container {
@@ -153,16 +165,9 @@ nav a:hover {
 }
 
 .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Ab hum yahan par animated background ka use karenge */
-    /* Is line ko comment kar sakte hain ya hata sakte hain */
-    /* background: url('images/hero_bg_effect.png') no-repeat center center/cover; */
-    background-color: transparent; /* Animation ko dikhane ke liye transparent rakha */
-    opacity: 1; /* Animated cubes ko dikhane ke liye opacity 1 rakhi */
+    /* Ab iski zaroorat nahi kyunki animated-background use ho raha hai */
+    background-color: transparent; 
+    opacity: 1; 
     z-index: 1;
 }
 
@@ -311,7 +316,7 @@ footer {
     border-top: 1px solid #333;
 }
 
-/* ANIMATIONS (script.js se linked) */
+/* ANIMATIONS */
 .animate-up {
     opacity: 0;
     transform: translateY(20px);
