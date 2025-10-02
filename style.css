@@ -1,15 +1,16 @@
-/* General Styles */
+/* General */
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #061116; /* Dark base color */
-  color: #c0c0c0; /* Silver text color */
+  background-color: #000000; /* Pure Black */
+  color: #c0c0c0; /* Silver text */
   line-height: 1.6;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  transition: 0.3s;
 }
 
 /* Container */
@@ -19,18 +20,21 @@ a {
   margin: 0 auto;
 }
 
-/* Header / Hero */
+/* Header */
 header {
-  background: #061116; 
   padding: 100px 0;
   text-align: center;
-  color: #c0c0c0;
-  border-bottom: 2px solid #888; /* subtle silver border */
+  border-bottom: 2px solid #888; /* subtle silver line */
+}
+
+header .logo {
+  width: 120px;
+  margin-bottom: 20px;
 }
 
 header h1 {
   font-size: 3em;
-  color: #e0e0e0; /* Silver accent */
+  color: #ffffff; /* bright for contrast */
   margin-bottom: 15px;
 }
 
@@ -39,36 +43,31 @@ header p {
   margin-bottom: 25px;
 }
 
-header .logo {
-  width: 120px;
-  margin-bottom: 20px;
-}
-
-/* Buttons */
 .btn {
   display: inline-block;
   padding: 12px 30px;
   background: #c0c0c0; /* Silver button */
-  color: #061116;
+  color: #000000; /* Black text on button */
   border-radius: 30px;
-  transition: 0.3s;
   font-weight: bold;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(255,255,255,0.2);
 }
 
 .btn:hover {
-  background: #e0e0e0;
+  background: #ffffff;
   transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255,255,255,0.4);
 }
 
 /* Plans Section */
 #plans {
   padding: 80px 0;
-  background: #0b1a26; /* Slightly different dark shade */
   text-align: center;
 }
 
 #plans h2 {
-  font-size: 2.5em;
+  font-size: 2.8em;
   margin-bottom: 50px;
   color: #c0c0c0;
 }
@@ -81,28 +80,29 @@ header .logo {
 }
 
 .plan {
-  background: #061116;
+  background: #111111;
   padding: 30px;
   border-radius: 15px;
   width: 300px;
+  border: 2px solid #c0c0c0;
   transition: 0.3s;
-  border: 2px solid #888; /* Silver border */
+  box-shadow: 0 4px 15px rgba(255,255,255,0.1);
 }
 
 .plan:hover {
   transform: translateY(-10px);
-  border-color: #e0e0e0;
+  border-color: #ffffff;
+  box-shadow: 0 8px 30px rgba(255,255,255,0.2);
 }
 
 .plan h3 {
-  color: #e0e0e0;
+  color: #ffffff;
   margin-bottom: 15px;
 }
 
 /* Contact Section */
 #contact {
   padding: 80px 0;
-  background: #061116;
   text-align: center;
 }
 
@@ -118,9 +118,14 @@ header .logo {
   border-bottom: 1px dotted #888;
 }
 
+#contact a:hover {
+  color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+
 /* Footer */
 footer {
-  background: #061116;
+  background: #000000;
   padding: 20px 0;
   text-align: center;
   color: #c0c0c0;
