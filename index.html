@@ -5,33 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BadmoshNodes - Minecraft Hosting</title>
 <style>
-body {
-  margin:0;
-  font-family: 'Roboto', sans-serif;
-  background:#000;
-  color:#c0c0c0;
-}
-.container { width:90%; max-width:1200px; margin:0 auto; padding:50px 0; }
-header { text-align:center; padding:50px 0; border-bottom:2px solid #888; }
-header h1 { font-size:3em; color:#fff; margin-bottom:10px; }
-header p { font-size:1.5em; margin-bottom:20px; }
-
-.tabs { display:flex; justify-content:center; margin-bottom:40px; gap:20px; flex-wrap:wrap; }
-.tab-btn { display:flex; align-items:center; gap:10px; padding:10px 20px; background:#111; border:2px solid #c0c0c0; border-radius:10px; cursor:pointer; transition:0.3s; }
-.tab-btn.active { background:#222; border-color:#fff; }
-.tab-btn img { width:24px; height:16px; }
-
-.plans { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
-.plan { background:#111; padding:20px; border-radius:15px; width:280px; border:2px solid #c0c0c0; box-shadow:0 4px 15px rgba(255,255,255,0.1); transition:0.3s; }
-.plan:hover { transform: translateY(-8px); border-color:#fff; box-shadow:0 8px 30px rgba(255,255,255,0.2); }
-.plan h4 { color:#fff; margin-bottom:10px; }
-.plan p { font-size:0.95em; }
-
-footer { background:#000; padding:20px 0; text-align:center; color:#c0c0c0; border-top:2px solid #888; }
-
-/* Hide all tabs by default */
-.country-plan { display:none; }
-.country-plan.active { display:block; }
+body {margin:0;font-family:'Roboto',sans-serif;background:#000;color:#c0c0c0;}
+header {text-align:center;padding:50px 0;border-bottom:2px solid #888;}
+header h1 {font-size:3em;color:#fff;margin-bottom:10px;}
+header p {font-size:1.5em;margin-bottom:20px;}
+.tabs {display:flex;justify-content:center;margin-bottom:40px;gap:20px;flex-wrap:wrap;}
+.tab-btn {display:flex;align-items:center;gap:10px;padding:10px 20px;background:#111;border:2px solid #c0c0c0;border-radius:10px;cursor:pointer;transition:0.3s;text-decoration:none;color:#c0c0c0;}
+.tab-btn:hover {background:#222;border-color:#fff;}
+.tab-btn img {width:24px;height:16px;}
+footer {background:#000;padding:20px 0;text-align:center;color:#c0c0c0;border-top:2px solid #888;}
 </style>
 </head>
 <body>
@@ -41,92 +23,15 @@ footer { background:#000; padding:20px 0; text-align:center; color:#c0c0c0; bord
   <p>Fast, Reliable & Secure Minecraft Hosting</p>
 </header>
 
-<div class="container">
-  <!-- Country Tabs -->
-  <div class="tabs">
-    <div class="tab-btn active" data-country="india"><img src="https://flagcdn.com/in.svg" alt="India"> India</div>
-    <div class="tab-btn" data-country="singapore"><img src="https://flagcdn.com/sg.svg" alt="Singapore"> Singapore</div>
-    <div class="tab-btn" data-country="germany"><img src="https://flagcdn.com/de.svg" alt="Germany"> Germany</div>
-  </div>
-
-  <!-- INDIA Plans -->
-  <div class="country-plan active" id="india">
-    <h2>🌐 India Hosting Plans 🇮🇳</h2>
-    <h3>💰 Budget Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>1vCore | 1GB DDR4 | 1 Port | ₹20/mo</p></div>
-      <div class="plan"><h4>Plan 2</h4><p>1vCore | 2GB DDR4 | 4GB NVMe | ₹60/mo</p></div>
-      <div class="plan"><h4>Plan 3</h4><p>2vCores | 4GB DDR4 | 8GB NVMe | ₹120/mo</p></div>
-    </div>
-    <h3>💎 Premium Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>1 vCore | 1GB DDR4 | 2GB NVMe | ₹35/mo</p></div>
-      <div class="plan"><h4>Plan 2</h4><p>1 vCore | 2GB DDR4 | 4GB NVMe | ₹80/mo</p></div>
-    </div>
-    <h3>🚀 Ultra Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>AMD Ryzen™ 9 | 1 vCore @ 4.0GHz+ | 3GB DDR5 | 5GB NVMe | ₹200/mo</p></div>
-      <div class="plan"><h4>Plan 2</h4><p>Ryzen™ 9 / EPYC 9 | 2 vCores @ 4.0GHz+ | 8GB DDR5 | 50GB NVMe | ₹699/mo</p></div>
-    </div>
-  </div>
-
-  <!-- SINGAPORE Plans -->
-  <div class="country-plan" id="singapore">
-    <h2>🌏 Singapore Hosting Plans 🇸🇬</h2>
-    <h3>💎 Premium Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>AMD EPYC/Intel | 1 vCore @ 3.7GHz+ | 1GB DDR4 | 5GB NVMe | ₹45/mo</p></div>
-      <div class="plan"><h4>Plan 2</h4><p>AMD EPYC/Intel | 2 vCores @ 3.7GHz+ | 2GB DDR4 | 5GB NVMe | ₹110/mo</p></div>
-    </div>
-    <h3>🚀 Ultra Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>AMD EPYC™ 4464P | 3 Cores @ 5.4GHz | 12GB RAM | 80GB SSD/NVMe | ₹450/mo</p></div>
-    </div>
-  </div>
-
-  <!-- GERMANY Plans -->
-  <div class="country-plan" id="germany">
-    <h2>🇩🇪 Germany Hosting Plans</h2>
-    <h3>💰 Budget Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>1 vCore @ 3.4GHz | 4GB DDR4 | 20GB NVMe | ₹160/mo</p></div>
-      <div class="plan"><h4>Plan 2</h4><p>3 vCores @ 3.4GHz | 8GB DDR4 | 50GB NVMe | ₹320/mo</p></div>
-    </div>
-    <h3>💎 Premium Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>Intel Xeon Gold 6150 | 1 vCore @ 3.7GHz | 4GB DDR4 | 25GB NVMe | ₹200/mo</p></div>
-    </div>
-    <h3>🚀 Ultra Plans</h3>
-    <div class="plans">
-      <div class="plan"><h4>Plan 1</h4><p>AMD Ryzen™ 9 5900X | 2 vCores @ 4.8GHz | 8GB DDR4 | 50GB NVMe | ₹899/mo</p></div>
-    </div>
-  </div>
+<div class="tabs">
+  <a href="india.html" target="_blank" class="tab-btn"><img src="https://flagcdn.com/in.svg" alt="India"> India</a>
+  <a href="singapore.html" target="_blank" class="tab-btn"><img src="https://flagcdn.com/sg.svg" alt="Singapore"> Singapore</a>
+  <a href="germany.html" target="_blank" class="tab-btn"><img src="https://flagcdn.com/de.svg" alt="Germany"> Germany</a>
 </div>
 
 <footer>
-  <div class="container">
-    <p>&copy; 2025 BadmoshNodes. All Rights Reserved.</p>
-  </div>
+  <p>&copy; 2025 BadmoshNodes. All Rights Reserved.</p>
 </footer>
-
-<script>
-// Tabs JS
-const tabBtns = document.querySelectorAll('.tab-btn');
-const countryPlans = document.querySelectorAll('.country-plan');
-
-tabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    tabBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const country = btn.getAttribute('data-country');
-    countryPlans.forEach(plan => {
-      plan.classList.remove('active');
-      if(plan.id === country) plan.classList.add('active');
-    });
-  });
-});
-</script>
 
 </body>
 </html>
