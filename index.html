@@ -1,4 +1,15 @@
-<header id="header">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BadmoshNodes - Powering Your Pixel Worlds</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <header id="header">
         <div class="container">
             <a href="#home" class="logo">
                 <img src="images/unnamed (1).jpg" alt="BadmoshNodes Logo" class="header-logo">
@@ -27,57 +38,58 @@
         </div>
     </section>
 
-    ```
+    <section id="services" class="section services">
+        <div class="container">
+            <h2 class="animate-up">Hosting Features That Matter</h2>
+            <p class="animate-up delay-1">Every BadmoshNodes plan comes packed with powerful features to give you the best hosting experience.</p>
+            
+            <div class="grid-3">
+                <div class="service-card animate-up">
+                    <h3 style="color: silver;">24/7 Uptime</h3>
+                    <p>Our robust infrastructure guarantees that your server is online 99.99% of the time, with minimal downtime.</p>
+                </div>
+                <div class="service-card animate-up delay-1">
+                    <h3 style="color: silver;">100% DDoS Protection</h3>
+                    <p>Our enterprise-grade security filters all malicious traffic, keeping your **BadmoshNodes** server online no matter what.</p>
+                </div>
+                <div class="service-card animate-up delay-2">
+                    <h3 style="color: silver;">100% Secure</h3>
+                    <p>Your data and server are completely secure with our advanced security protocols and monitoring.</p>
+                </div>
+                <div class="service-card animate-up">
+                    <h3 style="color: silver;">Lag Free</h3>
+                    <p>Experience smooth, high-performance gameplay on our premium, optimized hardware.</p>
+                </div>
+                <div class="service-card animate-up delay-1">
+                    <h3 style="color: silver;">Panel</h3>
+                    <p>Upgrade to our premium panel for advanced features, customizability, and priority support.</p>
+                    <a href="#" class="small-button">Go to Panel</a> 
+                </div>
+                <div class="service-card animate-up delay-2">
+                    <h3 style="color: silver;">Mods & Plugins Support</h3>
+                    <p>Easily install popular modpacks and plugins with our user-friendly control panel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-### 2. 🎨 `style.css` File Mein Badlav
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="animate-up">Get In Touch</h2>
+            <form class="animate-up delay-1">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message"></textarea>
+                <button type="submit" class="button">Send Message</button>
+            </form>
+        </div>
+    </section>
 
-Yeh styles **logo, buttons, aur Home Section** ko reference site jaisa compact aur dark banaayenge.
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 BadmoshNodes. All rights reserved.</p>
+        </div>
+    </footer>
 
-#### A. Logo aur Button Styles Update
-
-**`style.css`** mein **Button Styles** ke neeche yeh code **add** karein:
-
-```css
-/* Logo backup text ki styling */
-.logo-text {
-    display: none; /* By default hide */
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--color-secondary);
-    margin-left: 10px;
-}
-
-/* Jab image load nahi hoti hai, toh text dikhega */
-.header-logo:not([src]):not([srcset]) + .logo-text {
-    display: inline;
-}
-
-/* Home Section ke buttons ke liye naye styles */
-.hero-buttons {
-    margin-top: 40px;
-}
-
-.button-accent { /* 'View Our Plans' jaisa button */
-    background-color: #e5097f; /* Pink/Accent color */
-    color: var(--color-white);
-    margin-right: 20px;
-    padding: 15px 35px; /* Thoda bada button */
-    border: none;
-}
-
-.button-accent:hover {
-    background-color: #ff3399; 
-    transform: translateY(-2px);
-}
-
-.button-white { /* 'Join Our Community' jaisa button */
-    background-color: var(--color-white);
-    color: var(--color-primary); 
-    padding: 15px 35px;
-    border: none;
-}
-
-.button-white:hover {
-    background-color: var(--color-secondary); 
-    transform: translateY(-2px);
-}
+</body>
+</html>
