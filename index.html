@@ -4,1176 +4,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BadmoshNodes - Powering Your Pixel Worlds</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Customizing Tailwind for a Dark/Blue Cyberpunk look -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4F46E5', // Indigo-600
+                        'primary-light': '#818CF8', // Indigo-400 for text/glow
+                        'bg-dark': '#0F0F1A', 
+                        'bg-card': '#1A1A2A', 
+                        'secondary-accent': '#FFC000', // Gold/Yellow
+                    },
+                    fontFamily: {
+                        heading: ['Orbitron', 'sans-serif'],
+                        body: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(79, 70, 229, 0.7)',
+                        'card-hover': '0 0 30px rgba(79, 70, 229, 0.5)',
+                    },
+                    transitionProperty: {
+                        'shadow': 'box-shadow',
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     
-    <!-- Inline CSS for Futuristic Neon Design -->
+    <!-- Custom styles for non-Tailwind elements and structure -->
     <style>
-        /* FUTURISTIC GLOBAL STYLES */
-        :root {
-            --color-bg-dark: #0A0A0A; /* Deeper Black */
-            --color-bg-light: #1A1A1A;
-            --color-accent-cyan: #00FCE3; /* Bright Cyan */
-            --color-text-light: #E0E0E0; /* Off-white for readability */
-            --color-border-glow: rgba(0, 252, 227, 0.4);
-            --font-heading: 'Orbitron', sans-serif;
-            --font-body: 'Montserrat', sans-serif;
-            --spacing-lg: 120px 0;
-            --spacing-md: 80px 0;
-            --card-bg-opacity: 0.15; /* For frosted glass effect */
-            --header-height: 80px; /* Defined header height for padding calculation */
-        }
-
-        /* Base Reset & Typography */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         html {
             scroll-behavior: smooth;
         }
 
         body {
             font-family: var(--font-body);
-            background-color: var(--color-bg-dark);
-            color: var(--color-text-light);
+            background-color: #0F0F1A; 
+            color: #E0E0E0;
             line-height: 1.7;
             overflow-x: hidden;
-            position: relative;
-            z-index: 1; 
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            transition: overflow 0.3s; /* Smooth transition when disabling scroll */
         }
         
-        /* KEY CHANGE: Disable scrolling when the plan overlay is active */
+        .header-height { height: 80px; }
+        
         body.overlay-active {
             overflow: hidden; 
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .section {
-            padding: var(--spacing-lg);
-            text-align: center;
-            position: relative;
-            z-index: 10; 
-        }
-
-        h1, h2, h3 {
-            font-family: var(--font-heading);
-            color: var(--color-accent-cyan);
-            margin-bottom: 25px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            color: var(--color-text-light); 
-            /* Main Glow Effect */
-            text-shadow: 0 0 15px rgba(0, 252, 227, 0.6), 0 0 25px rgba(0, 252, 227, 0.3); 
-        }
-
-        h2 {
-            font-size: 2.8rem;
-            margin-bottom: 40px;
-            text-shadow: 0 0 10px rgba(0, 252, 227, 0.5);
-        }
-
-        h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        .section-subtitle {
-            font-size: 1.15rem;
-            color: rgba(224, 224, 224, 0.8);
-            max-width: 800px;
-            margin: -20px auto 60px auto;
-        }
-        
-        /* ---------------------------------------------------- */
-        /* FULL-SCREEN PLANS OVERLAYS (Level 1: Node Plans, Level 2: Sub-Plans, Level 3: Payment) */
-        /* ---------------------------------------------------- */
-        #plans-overlay, #sub-plans-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--color-bg-dark); /* Solid background to cover content */
-            z-index: 1500; /* Above header and all content */
-            display: none; /* Hidden by default */
-            overflow-y: auto; /* Allow internal scrolling if content is too long on small screens */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            padding-top: var(--header-height); /* Space for the fixed header */
-            text-align: center;
-        }
-        
-        #sub-plans-overlay {
-            z-index: 1600; /* Must be higher than the first overlay */
-        }
-        
-        /* Content within the overlay */
-        #plans-overlay .container, #sub-plans-overlay .container {
-            min-height: calc(100vh - var(--header-height));
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Center content vertically */
-            padding-top: 40px;
-            padding-bottom: 40px;
-        }
-        
-        /* LEVEL 3 OVERLAY: Payment Confirmation Box Styles */
-        #payment-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.85); /* Darker, slightly transparent background */
-            z-index: 1700; /* Highest z-index */
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .payment-box {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 15px;
-            border: 2px solid var(--color-accent-cyan);
-            box-shadow: 0 0 40px rgba(0, 252, 227, 0.6);
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .payment-box-header {
-            font-family: var(--font-heading);
-            font-size: 1.8rem;
-            color: var(--color-accent-cyan);
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(0, 252, 227, 0.5);
-            text-transform: uppercase;
-        }
-
-        .payment-info-text {
-            font-size: 1rem;
-            color: var(--color-text-light);
-            margin-bottom: 25px;
-            line-height: 1.5;
-            text-align: center; /* Changed to center for better look */
-        }
-        
-        .payment-info-text strong {
-            color: #FFC000;
-        }
-
-        .upi-container {
-            background: var(--color-bg-light);
-            border: 1px solid rgba(0, 252, 227, 0.4);
-            padding: 15px 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .upi-id-text {
-            font-family: var(--font-heading);
-            font-size: 1.1rem;
-            color: #FFC000; 
-            font-weight: bold;
-            flex-grow: 1;
-            text-align: left;
-            word-break: break-all;
-        }
-
-        .copy-button {
-            padding: 8px 15px;
-            margin-left: 10px;
-            font-size: 0.9rem;
-            background-color: var(--color-accent-cyan);
-            color: var(--color-bg-dark);
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .copy-button:hover {
-            background-color: #00E4C9;
-            box-shadow: 0 0 10px rgba(0, 252, 227, 0.8);
-        }
-        
-        .copy-button:active {
-            transform: scale(0.95);
-        }
-
-        .payment-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap; 
-            margin-top: 20px;
-        }
-        
-        .payment-actions .futuristic-button {
-            margin: 0;
-            flex-grow: 1;
-            min-width: 150px;
-            padding: 12px 20px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        /* ---------------------------------------------------- */
-
-
-        /* ---------------------------------------------------- */
-        /* FUTURISTIC ANIMATED BACKGROUND */
-        /* ---------------------------------------------------- */
-        .futuristic-background {
+        /* Animated Grid Background - Minimalistic version */
+        .background-grid {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -1; 
-            background: radial-gradient(circle at center, #0F1E2A 0%, #0A0A0A 100%);
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 252, 227, 0.2), rgba(0, 252, 227, 0));
-            animation: orb-movement 30s infinite ease-in-out alternate;
-            filter: blur(15px);
-            opacity: 0.6;
-        }
-
-        .orb:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 10%; animation-delay: 0s; }
-        .orb:nth-child(2) { width: 400px; height: 400px; bottom: 5%; right: 15%; animation-delay: 10s; }
-        .orb:nth-child(3) { width: 250px; height: 250px; top: 50%; left: 40%; animation-delay: 20s; }
-
-        @keyframes orb-movement {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-            25% { transform: translate(20vw, 10vh) scale(1.1); opacity: 0.7; }
-            50% { transform: translate(-15vw, 25vh) scale(0.9); opacity: 0.5; }
-            75% { transform: translate(10vw, -20vh) scale(1.2); opacity: 0.8; }
-            100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-        }
-
-        .line-grid {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
+            z-index: -10; 
+            background: linear-gradient(180deg, #0F0F1A 0%, #151525 100%);
             background-image: 
-                linear-gradient(0deg, rgba(0, 252, 227, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 252, 227, 0.05) 1px, transparent 1px);
+                linear-gradient(0deg, rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
             animation: grid-pan 60s linear infinite;
-            opacity: 0.3;
+            opacity: 0.2;
         }
-
-        .line-grid.delay-1 { animation-delay: -20s; opacity: 0.2; background-size: 70px 70px; }
-        .line-grid.delay-2 { animation-delay: -40s; opacity: 0.1; background-size: 90px 90px; }
 
         @keyframes grid-pan {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-50%, -50%); }
+            0% { background-position: 0 0; }
+            100% { background-position: -50px -50px; }
         }
 
-
-        /* ---------------------------------------------------- */
-        /* HEADER & NAVIGATION */
-        /* ---------------------------------------------------- */
-        #header {
-            background-color: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(8px); 
+        /* Overlay Styles */
+        #plans-overlay, #sub-plans-overlay {
             position: fixed;
-            width: 100%;
             top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0, 252, 227, 0.2);
-            padding: 15px 0;
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0F0F1A; 
+            z-index: 1500; 
+            display: none; 
+            overflow-y: auto; 
+            padding-top: 80px; 
         }
 
-        #header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .futuristic-logo .logo-text {
-            font-family: var(--font-heading);
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--color-accent-cyan);
-            text-decoration: none;
-            text-shadow: 0 0 10px rgba(0, 252, 227, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        .futuristic-logo .logo-text:hover {
-            color: var(--color-text-light);
-            text-shadow: 0 0 15px var(--color-accent-cyan);
-        }
-
-        .futuristic-nav .nav-link {
-            color: var(--color-text-light);
-            text-decoration: none;
-            margin-left: 35px;
-            font-size: 1.05rem;
-            font-family: var(--font-body);
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-        }
-
-        .futuristic-nav .nav-link:hover {
-            color: var(--color-accent-cyan);
-            text-shadow: 0 0 8px rgba(0, 252, 227, 0.7);
-        }
-
-        .futuristic-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--color-accent-cyan);
-            left: 50%;
-            bottom: -8px;
-            transform: translateX(-50%);
-            transition: width 0.3s ease;
-        }
-
-        .futuristic-nav .nav-link:hover::after {
-            width: 100%;
-        }
-
-
-        /* ---------------------------------------------------- */
-        /* HERO SECTION */
-        /* ---------------------------------------------------- */
-        .hero {
-            min-height: 100vh; 
-            display: flex;
+        #sub-plans-overlay { z-index: 1600; }
+        
+        /* Payment Modal Styles (Level 3) */
+        #payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             align-items: center;
             justify-content: center;
-            padding-top: 0; 
-            background: transparent; 
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .hero-content {
-            z-index: 20; 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--color-text-light);
-            margin-top: -10px;
-            margin-bottom: 50px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        .modal-content {
+            animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        .futuristic-button {
-            display: inline-block;
-            padding: 18px 45px;
-            border-radius: 8px;
-            font-weight: bold;
-            margin: 20px 25px 0 25px;
-            transition: all 0.4s ease;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-family: var(--font-heading);
-            letter-spacing: 1px;
-            border: 2px solid transparent;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            cursor: pointer; /* Add pointer for buttons */
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
-        .button-accent {
-            background-color: var(--color-accent-cyan);
-            color: var(--color-bg-dark);
-            border-color: var(--color-accent-cyan);
-        }
-
-        .button-accent:hover {
-            background-color: transparent;
-            color: var(--color-accent-cyan);
-            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.5);
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .button-secondary {
-            background-color: var(--color-bg-light);
-            color: var(--color-accent-cyan);
-            border-color: var(--color-accent-cyan);
-        }
-
-        .button-secondary:hover {
-            background-color: var(--color-accent-cyan);
-            color: var(--color-bg-dark);
-            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.5);
-            transform: translateY(-5px) scale(1.02);
-        }
-
-
-        /* ---------------------------------------------------- */
-        /* FEATURES SECTION - FROSTED GLASS CARDS */
-        /* ---------------------------------------------------- */
-        .features {
-            background: transparent; 
-            padding: var(--spacing-lg);
-        }
-
-        .grid-futuristic {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
-        }
-
-        .feature-card, .pricing-card {
-            background: rgba(0, 0, 0, var(--card-bg-opacity)); 
-            backdrop-filter: blur(8px);
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--color-border-glow);
-            box-shadow: 0 0 20px rgba(0, 252, 227, 0.1);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none; 
-            color: inherit;
-            cursor: pointer;
-            display: flex; 
-            flex-direction: column;
-            justify-content: space-between; 
-        }
-
-        .feature-card::before, .pricing-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 252, 227, 0.05) 0%, transparent 70%);
-            animation: rotate-glow 10s linear infinite;
-            z-index: -1;
+        /* New CSS for smooth header appearance */
+        #header {
+            transform: translateY(-100%);
             opacity: 0;
-            transition: opacity 0.3s ease;
         }
-
-        .feature-card:hover::before, .pricing-card:hover::before {
-            opacity: 1;
-        }
-
-        @keyframes rotate-glow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-
-        .feature-card:hover, .pricing-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 0 35px var(--color-accent-cyan), 0 0 50px rgba(0, 252, 227, 0.4);
-            border-color: var(--color-accent-cyan);
-        }
-
-        .card-title {
-            color: var(--color-accent-cyan);
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            font-family: var(--font-heading);
-            text-shadow: 0 0 5px rgba(0, 252, 227, 0.5);
-        }
-
-        .card-description {
-            color: var(--color-text-light);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .card-icon {
-            font-size: 3rem; 
-            margin-top: 15px;
-            display: block;
-            color: var(--color-accent-cyan);
-            text-shadow: 0 0 10px rgba(0, 252, 227, 0.8);
-            line-height: 1; 
-        }
-
-        .futuristic-link-button {
-            display: inline-block;
-            padding: 10px 25px;
-            background-color: var(--color-accent-cyan);
-            color: var(--color-bg-dark);
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--color-accent-cyan);
-            text-transform: uppercase;
-            font-family: var(--font-heading);
-            cursor: pointer;
-        }
-
-        .futuristic-link-button:hover {
-            background-color: transparent;
-            color: var(--color-accent-cyan);
-            box-shadow: 0 0 15px var(--color-accent-cyan);
-            transform: translateY(-3px);
-        }
-        
-        /* ---------------------------------------------------- */
-        /* SUB-PLANS LIST STYLES (for Plan 1-9 view) */
-        /* ---------------------------------------------------- */
-        #sub-plans-container {
-            max-width: 900px;
-            margin: 40px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .sub-plan-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background: rgba(0, 252, 227, 0.05); /* Very slight background */
-            border: 1px solid rgba(0, 252, 227, 0.2);
-            border-radius: 8px;
-            font-family: var(--font-body);
-            transition: all 0.3s ease;
-        }
-        
-        .sub-plan-item:hover {
-            background: rgba(0, 252, 227, 0.15);
-            border-color: var(--color-accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 252, 227, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        .plan-details-text {
-            text-align: left;
-            font-size: 1.1rem;
-            color: var(--color-text-light);
-            flex-grow: 1;
-        }
-        
-        .plan-name {
-            font-weight: bold;
-            color: #FFC000; /* Gold/Yellow color for plan name */
-            margin-right: 15px;
-            font-family: var(--font-heading);
-            font-size: 1.2rem;
-            letter-spacing: 0.5px;
-            min-width: 100px; /* Ensure plan name column has minimum width */
-            text-align: left;
-        }
-        
-        .plan-price {
-            font-weight: bold;
-            color: var(--color-accent-cyan);
-            font-family: var(--font-heading);
-            font-size: 1.2rem;
-            min-width: 120px; /* Ensure price column has minimum width */
-            text-align: right;
-        }
-        
-        .sub-plan-buy-button {
-            padding: 8px 20px;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        /* ---------------------------------------------------- */
-        /* PRICING SECTION - Main Node Grid Styles */
-        /* ---------------------------------------------------- */
-        .pricing {
-            background: transparent; 
-            padding: var(--spacing-lg);
-        }
-
-        .pricing-grid {
-            margin-top: 60px;
-        }
-
-        .pricing-card .card-title {
-            font-size: 2rem; 
-        }
-
-        .pricing-card .card-description {
-            font-size: 1.05rem;
-            margin-bottom: 30px;
-        }
-
-        .card-tag {
-            display: inline-block;
-            background-color: var(--color-accent-cyan);
-            color: var(--color-bg-dark);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(0, 252, 227, 0.7);
-        }
-
-        /* Styles for the detail view plans within the overlay */
-        #plans-detail-container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        #detail-plan-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        #detail-plan-grid .pricing-card {
-            padding: 30px;
-        }
-        
-        #detail-plan-grid .pricing-card .card-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-        /* Increased margin-bottom for gap between tag and button */
-        #detail-plan-grid .pricing-card .card-tag {
-            margin-bottom: 20px; 
-            display: block; 
-            margin-top: -10px;
-        }
-        #detail-plan-grid .pricing-card:hover {
-            transform: translateY(-5px) scale(1.01); 
-            box-shadow: 0 0 25px var(--color-accent-cyan), 0 0 40px rgba(0, 252, 227, 0.4);
-        }
-        
-        /* ---------------------------------------------------- */
-        /* CONTACT SECTION */
-        /* ---------------------------------------------------- */
-        .contact {
-            background: transparent; 
-            padding: var(--spacing-lg);
-            padding-bottom: 40px; /* Reduced bottom padding */
-        }
-
-        .futuristic-form {
-            max-width: 700px;
-            margin: 60px auto 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: left;
-            background: rgba(0, 0, 0, var(--card-bg-opacity));
-            backdrop-filter: blur(8px);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid var(--color-border-glow);
-            box-shadow: 0 0 25px rgba(0, 252, 227, 0.15);
-        }
-
-        .futuristic-form input[type="text"],
-        .futuristic-form input[type="email"],
-        .futuristic-form textarea {
-            padding: 18px;
-            border: 1px solid rgba(0, 252, 227, 0.3);
-            background-color: rgba(0, 0, 0, 0.3); 
-            color: var(--color-text-light);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: var(--font-body);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .futuristic-form input::placeholder,
-        .futuristic-form textarea::placeholder {
-            color: rgba(224, 224, 224, 0.5);
-            opacity: 0.7;
-        }
-
-        .futuristic-form input:focus,
-        .futuristic-form textarea:focus {
-            border-color: var(--color-accent-cyan);
-            outline: none;
-            box-shadow: 0 0 10px var(--color-accent-cyan);
-        }
-
-        .futuristic-form textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        /* ---------------------------------------------------- */
-        /* SUPPORT LINKS SECTION (NEW) */
-        /* ---------------------------------------------------- */
-        .support-links-section {
-            padding: 40px 0;
-            text-align: center;
-            background: transparent;
-        }
-
-        .support-links-grid {
-            max-width: 900px;
-            margin: 40px auto 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .support-link-item {
-            background: rgba(0, 0, 0, var(--card-bg-opacity)); 
-            backdrop-filter: blur(6px);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--color-border-glow);
-            box-shadow: 0 0 15px rgba(0, 252, 227, 0.1);
-            flex: 1 1 200px; /* Flexible width for responsiveness */
-            max-width: 300px;
-            text-align: left;
-            transition: all 0.3s ease;
-        }
-        
-        .support-link-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px var(--color-accent-cyan), 0 0 30px rgba(0, 252, 227, 0.4);
-            border-color: var(--color-accent-cyan);
-        }
-
-        .support-link-title {
-            font-family: var(--font-heading);
-            color: #FFC000; /* Gold/Yellow for title */
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .support-link-value, .support-link-value a {
-            color: var(--color-text-light);
-            font-size: 0.95rem;
-            word-break: break-all;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .support-link-value a:hover {
-            color: var(--color-accent-cyan);
-            text-decoration: underline;
-        }
-        
-        .support-link-value.soon {
-             color: rgba(255, 192, 0, 0.7);
-             font-style: italic;
-        }
-
-
-        /* ---------------------------------------------------- */
-        /* FOOTER */
-        /* ---------------------------------------------------- */
-        .futuristic-footer {
-            padding: 40px 0;
-            text-align: center;
-            background-color: var(--color-bg-light); 
-            border-top: 1px solid rgba(0, 252, 227, 0.2);
-            font-size: 0.9rem;
-            color: rgba(224, 224, 224, 0.6);
-        }
-
-        /* ---------------------------------------------------- */
-        /* UTILITY / SCROLL ANIMATIONS */
-        /* ---------------------------------------------------- */
-        .animate-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .animate-in.delay-1 { transition-delay: 0.1s; }
-        .animate-in.delay-2 { transition-delay: 0.2s; }
-        .animate-in.delay-3 { transition-delay: 0.3s; }
-        .animate-in.delay-4 { transition-delay: 0.4s; }
-
-        .is-visible {
-            opacity: 1;
+        #header.is-visible {
             transform: translateY(0);
-        }
-
-
-        /* ---------------------------------------------------- */
-        /* RESPONSIVE DESIGN */
-        /* ---------------------------------------------------- */
-        @media (max-width: 1024px) {
-            h1 { font-size: 2.8rem; }
-            h2 { font-size: 2.2rem; }
-            .futuristic-nav .nav-link { margin-left: 20px; }
-            .futuristic-button { padding: 15px 30px; margin: 15px 15px 0 15px; }
-            .section-subtitle { margin-bottom: 40px; }
-            .plan-details-text { font-size: 1rem; }
-            .plan-name, .plan-price { font-size: 1.1rem; }
-            .sub-plan-item { padding: 15px 20px; }
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            h2 { font-size: 1.8rem; }
-            h3 { font-size: 1.4rem; }
-            .section-subtitle { font-size: 1rem; margin-bottom: 30px; }
-            #header .container { flex-direction: column; padding: 15px 20px; }
-            .futuristic-nav { margin-top: 15px; }
-            .futuristic-nav .nav-link { margin: 0 10px; font-size: 0.9rem; }
-            .hero-buttons { flex-direction: column; align-items: center; }
-            .futuristic-button { width: 90%; margin: 10px 0; }
-            .grid-futuristic { gap: 25px; margin-top: 40px; }
-            .feature-card, .pricing-card, .futuristic-form { padding: 30px; }
-            .futuristic-logo .logo-text { font-size: 1.5rem; }
-            .section { padding: var(--spacing-md); }
-            
-            #plans-overlay .container, #sub-plans-overlay .container {
-                justify-content: flex-start; /* Push content up on small screens */
-            }
-            
-            .sub-plan-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-                padding: 15px;
-            }
-            .plan-name { margin-right: 0; font-size: 1.1rem; min-width: unset; text-align: left;}
-            .plan-price { font-size: 1.1rem; margin-top: 5px; min-width: unset; text-align: left; }
-            .plan-details-text { width: 100%; order: 3; font-size: 0.95rem; }
-            .sub-plan-buy-button { margin-left: 0; margin-top: 10px; width: 100%; }
-            
-            .payment-box {
-                padding: 30px 20px;
-                margin: 10px;
-            }
-            .payment-box-header {
-                font-size: 1.5rem;
-            }
-            .upi-container {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 10px;
-            }
-            .upi-id-text {
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            .copy-button {
-                margin-left: 0;
-                width: 100%;
-            }
-            .payment-actions {
-                flex-direction: column;
-            }
-            .payment-actions .futuristic-button {
-                width: 100%;
-            }
-            .support-link-item {
-                 flex: 1 1 100%;
-                 max-width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.6rem; }
-            .futuristic-nav .nav-link { margin: 0 5px; font-size: 0.85rem; }
-            .futuristic-logo .logo-text { font-size: 1.3rem; }
+            opacity: 1;
         }
     </style>
 </head>
-<body>
+<body class="bg-bg-dark text-gray-200 font-body">
 
-    <!-- Animated Futuristic Background -->
-    <div class="futuristic-background">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="line-grid"></div>
-        <div class="line-grid delay-1"></div>
-        <div class="line-grid delay-2"></div>
-    </div>
+    <!-- Animated Grid Background -->
+    <div class="background-grid"></div>
     
     <!-- Header/Navigation Bar -->
-    <header id="header">
-        <div class="container">
-            <a href="#home" class="logo futuristic-logo">
-                <span class="logo-text">BadmoshNodes</span> 
+    <header id="header" class="header-height fixed top-0 w-full z-50 bg-bg-dark bg-opacity-90 backdrop-blur-md border-b border-primary-light/20 shadow-lg shadow-black/50 transition-all duration-700 ease-in-out">
+        <div class="container mx-auto px-6 h-full flex justify-between items-center">
+            <a href="#home" class="logo">
+                <span class="text-2xl font-heading font-bold text-primary-light tracking-wider shadow-primary-light/50 drop-shadow-xl hover:text-white transition duration-300">
+                    BadmoshNodes
+                </span> 
             </a>
-            <nav class="futuristic-nav" id="main-nav">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#features" class="nav-link">Features</a>
-                <!-- Discord link added as requested -->
-                <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="nav-link">Discord</a>
-                <a href="#contact" class="nav-link">Contact</a>
+            <nav class="space-x-8 hidden md:flex">
+                <a href="#home" class="nav-link text-lg text-gray-300 hover:text-primary transition duration-300 relative group">Home
+                    <span class="absolute bottom-[-5px] left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <a href="#features" class="nav-link text-lg text-gray-300 hover:text-primary transition duration-300 relative group">Features
+                    <span class="absolute bottom-[-5px] left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <!-- Discord link -->
+                <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="nav-link text-lg text-gray-300 hover:text-primary transition duration-300 relative group">Discord
+                    <span class="absolute bottom-[-5px] left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <!-- Contact link added -->
+                <a href="#contact" class="nav-link text-lg text-gray-300 hover:text-primary transition duration-300 relative group">Contact
+                    <span class="absolute bottom-[-5px] left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
             </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="section hero futuristic-section">
-        <div class="container hero-content">
-            <div class="hero-text-area">
-                <h1 class="animate-in delay-1">POWERING YOUR PIXEL WORLDS <br>LAG-FREE SECURE INSTANT</h1>
-                <p class="hero-subtitle animate-in delay-2">Get your high-performance server online in minutes with BadmoshNodes.</p>
+    <section id="home" class="min-h-screen flex items-center justify-center pt-24 pb-16">
+        <div class="container mx-auto px-6 text-center">
+            <div class="hero-content">
+                <h1 class="text-5xl md:text-6xl font-heading font-extrabold text-white tracking-wide mb-4 animate-in" style="text-shadow: 0 0 10px rgba(79, 70, 229, 0.8);">
+                    POWERING YOUR PIXEL WORLDS
+                </h1>
+                <p class="text-2xl font-heading text-primary-light mb-8 animate-in delay-1">
+                    LAG-FREE SECURE INSTANT HOSTING
+                </p>
+                <p class="text-xl text-gray-400 mb-12 max-w-4xl mx-auto animate-in delay-2">
+                    Apna high-performance server chalao kuch hi minutes mein BadmoshNodes ke saath. Best latency aur security.
+                </p>
                 
-                <div class="hero-buttons">
-                    <!-- Button links to the pricing section -->
-                    <a href="#pricing" class="button futuristic-button button-accent animate-in delay-3">EXPLORE PLANS</a>
-                    <!-- JOIN COMMUNITY link updated with Discord URL and target="_blank" -->
-                    <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="button futuristic-button button-secondary animate-in delay-4">JOIN COMMUNITY</a>
+                <div class="hero-buttons flex justify-center space-x-6 animate-in delay-3">
+                    <a href="#pricing" class="px-8 py-3 rounded-lg font-bold text-lg uppercase bg-primary text-white transition duration-300 hover:bg-indigo-700 hover:shadow-glow focus:outline-none">
+                        EXPLORE PLANS
+                    </a>
+                    <a href="https://discord.gg/3Dxx7MeNTp" target="_blank" class="px-8 py-3 rounded-lg font-bold text-lg uppercase border-2 border-primary text-primary-light bg-transparent transition duration-300 hover:bg-primary/20 hover:text-white focus:outline-none">
+                        JOIN COMMUNITY
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="section features futuristic-section">
-        <div class="container">
-            <h2 class="animate-in">ADVANCED FEATURES FOR SERIOUS GAMERS</h2>
-            <p class="section-subtitle animate-in delay-1">Every BadmoshNodes plan comes packed with powerful features to give you the ultimate hosting experience.</p>
+    <section id="features" class="py-20 md:py-32 bg-bg-dark/50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-heading font-bold text-primary-light mb-4 animate-in">ADVANCED FEATURES</h2>
+            <p class="text-xl text-gray-400 mb-16 animate-in delay-1">Har BadmoshNodes plan mein hai powerful features behtareen hosting ke liye.</p>
             
-            <div class="grid-futuristic">
-                <div class="feature-card animate-in">
-                    <h3 class="card-title">24/7 UPTIME</h3>
-                    <p class="card-description">Our robust infrastructure guarantees that your server is online 99.99% of the time with minimal downtime.</p>
-                    <span class="card-icon">⚡</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                
+                <!-- Feature Card 1 -->
+                <div class="feature-card bg-bg-card p-8 rounded-xl border border-primary/20 shadow-lg hover:shadow-card-hover transition duration-500 transform hover:-translate-y-2 animate-in delay-2">
+                    <span class="text-5xl text-primary-light mb-4 block">⚡</span>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3">24/7 UPTIME</h3>
+                    <p class="text-gray-400 text-sm">Hamara infrastructure guarantee karta hai 99.99% uptime with minimal downtime.</p>
                 </div>
-                <div class="feature-card animate-in delay-1">
-                    <h3 class="card-title">DDoS PROTECTION</h3>
-                    <p class="card-description">Our enterprise-grade security filters all malicious traffic, keeping your BadmoshNodes server online, no matter what.</p>
-                    <span class="card-icon">🛡️</span>
+                
+                <!-- Feature Card 2 -->
+                <div class="feature-card bg-bg-card p-8 rounded-xl border border-primary/20 shadow-lg hover:shadow-card-hover transition duration-500 transform hover:-translate-y-2 animate-in delay-3">
+                    <span class="text-5xl text-primary-light mb-4 block">🛡️</span>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3">DDoS PROTECTION</h3>
+                    <p class="text-gray-400 text-sm">Enterprise-grade security malicious traffic ko rokta hai, aapka server hamesha online rehta hai.</p>
                 </div>
-                <div class="feature-card animate-in delay-2">
-                    <h3 class="card-title">100% SECURE</h3>
-                    <p class="card-description">Your data and server are completely secure with our advanced security protocols and monitoring.</p>
-                    <span class="card-icon">🔒</span>
+                
+                <!-- Feature Card 3 -->
+                <div class="feature-card bg-bg-card p-8 rounded-xl border border-primary/20 shadow-lg hover:shadow-card-hover transition duration-500 transform hover:-translate-y-2 animate-in delay-4">
+                    <span class="text-5xl text-primary-light mb-4 block">🔒</span>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3">100% SECURE</h3>
+                    <p class="text-gray-400 text-sm">Advanced security protocols aur monitoring se aapka data aur server poori tarah secure hai.</p>
                 </div>
-                <div class="feature-card animate-in">
-                    <h3 class="card-title">LAG-FREE PERFORMANCE</h3>
-                    <p class="card-description">Experience smooth, high-performance gameplay on our premium optimized hardware.</p>
-                    <span class="card-icon">🚀</span>
+                
+                <!-- Feature Card 4 -->
+                <div class="feature-card bg-bg-card p-8 rounded-xl border border-primary/20 shadow-lg hover:shadow-card-hover transition duration-500 transform hover:-translate-y-2 animate-in delay-2">
+                    <span class="text-5xl text-primary-light mb-4 block">🚀</span>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3">LAG-FREE PERFORMANCE</h3>
+                    <p class="text-gray-400 text-sm">Premium optimized hardware par smooth aur high-performance gameplay experience karein.</p>
                 </div>
-                <!-- ADVANCED PANEL card updated with external link and target="_blank" -->
-                <div class="feature-card animate-in delay-1">
-                    <h3 class="card-title">ADVANCED PANEL</h3>
-                    <p class="card-description">Upgrade to our premium panel for advanced features, customizability, and priority support.</p>
-                    <a href="https://panel.badmoshnodes.com" target="_blank" class="futuristic-link-button">ACCESS PANEL</a>
-                    <span class="card-icon">⚙️</span>
-                </div>
+
+                <!-- Feature Card 5: Advanced Panel Link -->
+                <a href="https://panel.badmoshnodes.com" target="_blank" class="feature-card bg-bg-card p-8 rounded-xl border border-primary/20 shadow-lg hover:shadow-card-hover transition duration-500 transform hover:-translate-y-2 flex flex-col justify-between animate-in delay-3">
+                    <div>
+                        <span class="text-5xl text-primary-light mb-4 block">⚙️</span>
+                        <h3 class="text-xl font-heading font-semibold text-white mb-3">ADVANCED PANEL</h3>
+                        <p class="text-gray-400 text-sm mb-4">Advanced features, customizability, aur priority support ke liye hamara premium panel use karein.</p>
+                    </div>
+                    <div class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded-md text-sm font-bold hover:bg-indigo-700 transition">ACCESS PANEL</div>
+                </a>
+                
             </div>
         </div>
     </section>
 
-    <!-- Pricing/Nodes Section (Only shows main node cards) -->
-    <section id="pricing" class="section pricing futuristic-section">
-        <div class="container">
-            <h2 class="animate-in">CHOOSE YOUR NODE CHOOSE YOUR DOMAIN</h2>
-            <p class="section-subtitle animate-in delay-1">Select the region closest to you for the lowest latency and best performance.</p>
+    <!-- Pricing/Nodes Section -->
+    <section id="pricing" class="py-20 md:py-32">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-heading font-bold text-primary-light mb-4 animate-in">CHOOSE YOUR NODE</h2>
+            <p class="text-xl text-gray-400 mb-16 max-w-4xl mx-auto animate-in delay-1">Apne liye sabse nazdeek region chunein low latency aur behtareen performance ke liye.</p>
             
-            <!-- Main Node Grid - UPDATED ONCLICK HANDLERS -->
-            <div class="grid-futuristic pricing-grid" id="main-pricing-grid">
+            <!-- Main Node Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 
-                <!-- INDIA NODE: Calls showPlans('india') -->
-                <a href="#" onclick="showPlans('india'); return false;" class="pricing-card animate-in">
-                    <div> <!-- Container for Title and Description (Top Content) -->
-                        <h3 class="card-title">INDIA NODE</h3>
-                        <p class="card-description">High-speed hosting perfect for players in India and surrounding regions.</p>
+                <!-- INDIA NODE -->
+                <a href="#" onclick="showPlans('india'); return false;" class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-3 flex flex-col justify-between cursor-pointer animate-in delay-2">
+                    <div>
+                        <h3 class="text-3xl font-heading font-bold text-white mb-2">INDIA NODE</h3>
+                        <p class="text-sm text-gray-400 mb-6">High-speed hosting, India aur aas-paas ke regions ke liye perfect.</p>
                     </div>
-                    <div> <!-- Container for Tag and Button (Bottom Content) -->
-                        <span class="card-tag">LOW LATENCY</span>
-                        <div class="futuristic-link-button">VIEW PLANS</div>
+                    <div>
+                        <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-secondary-accent text-gray-900 mb-4">LOW LATENCY</span>
+                        <div class="mt-4 px-6 py-3 bg-primary text-white rounded-lg text-lg font-bold uppercase hover:bg-indigo-700 transition">VIEW PLANS</div>
                     </div>
                 </a>
                 
-                <!-- GERMANY NODE: Calls showPlans('germany') -->
-                <a href="#" onclick="showPlans('germany'); return false;" class="pricing-card animate-in delay-1">
+                <!-- GERMANY NODE -->
+                <a href="#" onclick="showPlans('germany'); return false;" class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-3 flex flex-col justify-between cursor-pointer animate-in delay-3">
                     <div>
-                        <h3 class="card-title">GERMANY NODE</h3>
-                        <p class="card-description">Premium European hosting with robust DDoS protection and low EU latency.</p>
+                        <h3 class="text-3xl font-heading font-bold text-white mb-2">GERMANY NODE</h3>
+                        <p class="text-sm text-gray-400 mb-6">Premium European hosting robust DDoS protection ke saath.</p>
                     </div>
                     <div>
-                        <span class="card-tag">EU OPTIMIZED</span>
-                        <div class="futuristic-link-button">VIEW PLANS</div>
-                    </div>
-                </a>
-                
-                <!-- SINGAPORE NODE: Calls showPlans('singapore') -->
-                <a href="#" onclick="showPlans('singapore'); return false;" class="pricing-card animate-in delay-2">
-                    <div>
-                        <h3 class="card-title">SINGAPORE NODE</h3>
-                        <p class="card-description">Asia-Pacific hub for the best connectivity across Asia and Oceania.</p>
-                    </div>
-                    <div>
-                        <span class="card-tag">ASIA-PACIFIC</span>
-                        <div class="futuristic-link-button">VIEW PLANS</div>
+                        <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-secondary-accent text-gray-900 mb-4">EU OPTIMIZED</span>
+                        <div class="mt-4 px-6 py-3 bg-primary text-white rounded-lg text-lg font-bold uppercase hover:bg-indigo-700 transition">VIEW PLANS</div>
                     </div>
                 </a>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section contact futuristic-section">
-        <div class="container">
-            <h2 class="animate-in">TRANSMIT ENCRYPTED MESSAGE</h2>
-            <p class="section-subtitle animate-in delay-1">Need specific assistance? Send us an encrypted message and we will respond via Discord.</p>
-            <form class="futuristic-form animate-in delay-2">
-                <input type="text" placeholder="YOUR NAME (PLAYER TAG)" required>
-                <input type="email" placeholder="YOUR CYBER-EMAIL" required>
-                <textarea placeholder="YOUR MESSAGE (ENCRYPTED)"></textarea>
-                <button type="submit" class="button futuristic-button button-accent">TRANSMIT MESSAGE</button>
-            </form>
-        </div>
-    </section>
-    
-    <!-- NEW SUPPORT LINKS SECTION -->
-    <section class="support-links-section">
-        <div class="container">
-            <h2 class="animate-in" style="margin-bottom: 20px; font-size: 2rem;">CONTACT & SUPPORT LINKS</h2>
-            <p class="section-subtitle animate-in delay-1" style="margin-top: -10px; margin-bottom: 40px;">Find our official channels for support and community.</p>
-            
-            <div class="support-links-grid">
                 
-                <!-- GMAIL (Soon) -->
-                <div class="support-link-item animate-in">
-                    <span class="support-link-title">GMAIL (Email Support)</span>
-                    <p class="support-link-value soon">soon</p>
-                </div>
-                
-                <!-- DISCORD -->
-                <div class="support-link-item animate-in delay-1">
-                    <span class="support-link-title">DISCORD (Community & Support)</span>
-                    <p class="support-link-value">
-                        <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank">https://discord.com/invite/3Dxx7MeNTp</a>
-                    </p>
-                </div>
-                
-                <!-- WEBSITE -->
-                <div class="support-link-item animate-in delay-2">
-                    <span class="support-link-title">OFFICIAL WEBSITE</span>
-                    <p class="support-link-value">
-                        <a href="https://paidhoting.github.io/BadmoshNodes" target="_blank">https://paidhoting.github.io/BadmoshNodes</a>
-                    </p>
-                </div>
-                
-                <!-- PANEL -->
-                <div class="support-link-item animate-in delay-3">
-                    <span class="support-link-title">ADVANCED PANEL LOGIN</span>
-                    <p class="support-link-value">
-                        <a href="https://panel.badmoshnodes.com/" target="_blank">https://panel.badmoshnodes.com/</a>
-                    </p>
-                </div>
+                <!-- SINGAPORE NODE -->
+                <a href="#" onclick="showPlans('singapore'); return false;" class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-3 flex flex-col justify-between cursor-pointer animate-in delay-4">
+                    <div>
+                        <h3 class="text-3xl font-heading font-bold text-white mb-2">SINGAPORE NODE</h3>
+                        <p class="text-sm text-gray-400 mb-6">Asia-Pacific hub, Asia aur Oceania mein behtareen connectivity ke liye.</p>
+                    </div>
+                    <div>
+                        <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-secondary-accent text-gray-900 mb-4">ASIA-PACIFIC</span>
+                        <div class="mt-4 px-6 py-3 bg-primary text-white rounded-lg text-lg font-bold uppercase hover:bg-indigo-700 transition">VIEW PLANS</div>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
 
+    <!-- CONTACT & SUPPORT SECTION -->
+    <section id="contact" class="py-16 md:py-24 bg-bg-card border-t border-primary/30">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-heading font-bold text-primary-light mb-4 animate-in">CONTACT & SUPPORT LINKS</h2>
+            <p class="text-lg text-gray-400 mb-12 animate-in delay-1">Humare official channels dhoondhe support aur community ke liye. Click to open link.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Official Website (Link hidden, triggered by click) -->
+                <a href="https://paidhoting.github.io/BadmoshNodes" target="_blank" class="contact-link bg-gray-900 p-6 rounded-xl border border-primary/20 hover:border-primary transition duration-300 transform hover:scale-[1.02] text-left animate-in delay-2 group cursor-pointer">
+                    <h3 class="text-xl font-heading font-semibold text-primary-light mb-1 group-hover:text-white transition duration-300">OFFICIAL WEBSITE</h3>
+                </a>
+
+                <!-- Panel Login (Link hidden, triggered by click) -->
+                <a href="https://panel.badmoshnodes.com/" target="_blank" class="contact-link bg-gray-900 p-6 rounded-xl border border-primary/20 hover:border-primary transition duration-300 transform hover:scale-[1.02] text-left animate-in delay-3 group cursor-pointer">
+                    <h3 class="text-xl font-heading font-semibold text-primary-light mb-1 group-hover:text-white transition duration-300">PANEL LOGIN</h3>
+                </a>
+                
+                <!-- Discord (Link hidden, triggered by click) -->
+                <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="contact-link bg-gray-900 p-6 rounded-xl border border-primary/20 hover:border-primary transition duration-300 transform hover:scale-[1.02] text-left animate-in delay-4 group cursor-pointer">
+                    <h3 class="text-xl font-heading font-semibold text-primary-light mb-1 group-hover:text-white transition duration-300">DISCORD</h3>
+                </a>
+                
+                <!-- Gmail (Coming Soon) - Still disabled -->
+                <div class="contact-link bg-gray-900 p-6 rounded-xl border border-gray-700 text-left opacity-60 cursor-default animate-in delay-5" title="Support email jald hi aayega!">
+                    <h3 class="text-xl font-heading font-semibold text-gray-500 mb-1">GMAIL (SOON)</h3>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="futuristic-footer">
-        <div class="container">
+    <footer class="py-8 bg-bg-dark/50 border-t border-primary/10">
+        <div class="container mx-auto px-6 text-center text-sm text-gray-500">
             <p>&copy; 2025 BadmoshNodes - ALL PROTOCOLS RESERVED.</p>
         </div>
     </footer>
     
     <!-- LEVEL 1 OVERLAY: Node Plan Tiers (Budget, Premium, Ultra) -->
-    <div id="plans-overlay">
-        <div class="container">
-            <!-- Back Button to Main Nodes -->
-            <button onclick="showMainNodes()" class="futuristic-button button-secondary" style="margin-bottom: 40px; margin-top: 0; padding: 10px 30px;">
+    <div id="plans-overlay" class="fixed top-0 left-0 w-full h-full bg-bg-dark z-1500 overflow-y-auto pt-20 hidden">
+        <div class="container mx-auto px-6 min-h-screen pt-10 pb-16 text-center">
+            
+            <!-- Back Button -->
+            <button onclick="showMainNodes()" class="px-6 py-2 rounded-lg font-bold uppercase border border-primary-light text-primary-light bg-transparent transition duration-300 hover:bg-primary/20 mb-8 focus:outline-none">
                 ← BACK TO NODES
             </button>
 
             <!-- Dynamic Title and Subtitle -->
-            <h2 id="detail-title" style="margin-top: 20px;"></h2>
-            <p id="detail-subtitle" class="section-subtitle" style="margin-bottom: 40px;"></p>
+            <h2 id="detail-title" class="text-4xl font-heading font-bold text-white mb-2"></h2>
+            <p id="detail-subtitle" class="text-xl text-gray-400 mb-12"></p>
 
             <!-- Plan Grid (Content injected by JavaScript) -->
-            <div class="grid-futuristic" id="detail-plan-grid">
-                <!-- Budget, Premium, Ultra Plans will be generated here -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="detail-plan-grid">
+                <!-- Plan Tiers will be generated here -->
             </div>
         </div>
     </div>
     
     <!-- LEVEL 2 OVERLAY: Detailed Sub-Plans (Plan 1-9) -->
-    <div id="sub-plans-overlay">
-        <div class="container">
-            <!-- Back Button to Budget/Premium/Ultra Tiers - UPDATED WITH ID -->
-            <button id="sub-plans-back-button" class="futuristic-button button-secondary" style="margin-bottom: 40px; margin-top: 0; padding: 10px 30px;">
+    <div id="sub-plans-overlay" class="fixed top-0 left-0 w-full h-full bg-bg-dark z-1600 overflow-y-auto pt-20 hidden">
+        <div class="container mx-auto px-6 min-h-screen pt-10 pb-16 text-center">
+            
+            <!-- Back Button to Tier Selection -->
+            <button id="sub-plans-back-button" class="px-6 py-2 rounded-lg font-bold uppercase border border-primary-light text-primary-light bg-transparent transition duration-300 hover:bg-primary/20 mb-8 focus:outline-none">
                 ← BACK TO TIERS
             </button>
             
-            <h2 id="sub-detail-title" style="margin-top: 20px;"></h2>
-            <p id="sub-detail-subtitle" class="section-subtitle" style="margin-bottom: 40px;">Choose your perfect configuration. Scale up or down anytime.</p>
+            <h2 id="sub-detail-title" class="text-4xl font-heading font-bold text-white mb-2"></h2>
+            <p id="sub-detail-subtitle" class="text-xl text-gray-400 mb-12">Apna perfect configuration chunein. Jab chahe scale up ya down karein.</p>
             
             <!-- Sub-Plan List (Content injected by JavaScript) -->
-            <div id="sub-plans-container">
+            <div id="sub-plans-container" class="max-w-4xl mx-auto space-y-4">
                 <!-- Plan 1-9 List will be generated here -->
             </div>
         </div>
     </div>
 
-    <!-- LEVEL 3 OVERLAY: Payment Confirmation Box -->
-    <div id="payment-overlay">
-        <!-- Content will be injected dynamically by showPaymentScreen -->
+    <!-- LEVEL 3 OVERLAY: PAYMENT MODAL (NEW) -->
+    <div id="payment-modal" class="hidden absolute top-0 left-0 w-full h-full flex items-center justify-center p-4">
+        <div class="modal-content bg-bg-card p-8 rounded-xl border border-primary/50 shadow-2xl shadow-primary/30 max-w-xl w-full text-center">
+            <h3 class="text-3xl font-heading font-bold text-secondary-accent mb-2">Complete Your Payment</h3>
+            <p class="text-lg text-gray-400 mb-6">You've selected the <span id="selected-plan-name" class="text-primary-light font-bold"></span></p>
+
+            <div class="bg-gray-900 p-6 rounded-lg mb-6 border border-primary/20">
+                <p class="text-base text-gray-300 font-bold mb-4">Scan the QR code or use the UPI ID below to complete your payment</p>
+                
+                <!-- QR Code (Placeholder - Replace URL with actual QR Code) -->
+                <img id="upi-qr-code" src="https://placehold.co/200x200/4F46E5/FFFFFF?text=UPI+QR+CODE" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/200x200/4F46E5/FFFFFF?text=QR+Error';"
+                     alt="UPI QR Code" class="mx-auto rounded-lg mb-4 border-4 border-primary shadow-glow">
+                
+                <!-- UPI ID with Copy Button -->
+                <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3 bg-gray-800 p-3 rounded-md">
+                    <span id="upi-id-text" class="text-xl font-heading text-white select-all">sushantlite@fam</span>
+                    <button onclick="copyUpiId()" class="px-4 py-1.5 bg-secondary-accent text-gray-900 rounded-md text-sm font-bold uppercase hover:bg-yellow-500 transition focus:outline-none flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v9a2 2 0 002 2h2.553a1 1 0 01.832.445l.216.323a1 1 0 001.658 0l.216-.323a1 1 0 01.832-.445H14a2 2 0 002-2V5a2 2 0 00-2-2h-3V1a1 1 0 10-2 0v2H8zm2 4a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"></path></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Important Instructions -->
+            <p class="text-base text-primary-light font-semibold mb-6">
+                Once paid create a ticket on our <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="text-secondary-accent hover:underline">Discord</a> with your payment screenshot.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4">
+                <button onclick="hidePaymentModal()" class="px-6 py-2 rounded-lg font-bold uppercase border-2 border-primary text-primary-light bg-transparent transition duration-300 hover:bg-primary/20 focus:outline-none">
+                    ← GO BACK TO PLANS
+                </button>
+                <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="px-6 py-2 rounded-lg font-bold uppercase bg-primary text-white transition duration-300 hover:bg-indigo-700 hover:shadow-glow focus:outline-none">
+                    JOIN DISCORD
+                </a>
+            </div>
+        </div>
     </div>
 
 
-    <!-- Inline JavaScript for Scroll-based Animations and Dynamic Content -->
+    <!-- Inline JavaScript for Data and Functionality -->
     <script>
-        // Global Constants
-        const UPI_ID = 'sushantlite@fam';
-        const DISCORD_LINK = 'https://discord.com/invite/3Dxx7MeNTp';
-        
-        // Data structure containing plan details for each node
+        // Data structure containing plan details for each node (SAME AS BEFORE)
         const nodeData = {
             india: {
                 title: "INDIA NODE - PERFORMANCE TIERS",
@@ -1285,7 +527,7 @@
                             { name: "Plan 2", specs: "AMD EPYC/Intel | 2 vCores @ 3.7GHz+ | 2GB DDR4 | 5GB NVMe", price: "₹110/mo" },
                             { name: "Plan 3", specs: "AMD EPYC/Intel | 2 vCores @ 3.7GHz+ | 4GB DDR4 | 10GB NVMe", price: "₹240/mo" },
                             { name: "Plan 4", specs: "AMD EPYC/Intel | 2.5 vCores @ 3.7GHz+ | 6GB DDR4 | 15GB NVMe", price: "₹379/mo" },
-                            { name: "Plan 5", specs: "AMD EPYC/Intel | 3 vCores @ 3.7GHz+ | 8GB DDR4 | 20GB NVMe", price: "₹500/mo" },
+                            { name: "Plan 5", specs: "AMD EPYC/Intel | 3 vCores @ 3.7GHz+ | 8GB DDR4 | 20GB NVme", price: "₹500/mo" },
                             { name: "Plan 6", specs: "AMD EPYC/Intel | 4 vCores @ 3.7GHz+ | 12GB DDR4 | 30GB NVMe", price: "₹760/mo" },
                             { name: "Plan 7", specs: "AMD EPYC/Intel | 4 vCores @ 3.7GHz+ | 16GB DDR4 | 50GB NVMe", price: "₹979/mo" },
                             { name: "Plan 8", specs: "AMD EPYC/Intel | 6 vCores @ 3.7GHz+ | 24GB DDR4 | 75GB NVMe", price: "₹1299/mo" },
@@ -1313,15 +555,24 @@
         const subDetailTitle = document.getElementById('sub-detail-title');
         const subPlansContainer = document.getElementById('sub-plans-container');
         const subPlansBackButton = document.getElementById('sub-plans-back-button'); 
-        const paymentOverlay = document.getElementById('payment-overlay'); // New: Payment Overlay
+        
+        const paymentModal = document.getElementById('payment-modal');
+        const selectedPlanName = document.getElementById('selected-plan-name');
         
         const body = document.body;
+
+        // Stores the name of the currently selected plan for the payment modal to use
+        let currentSelectedPlan = '';
+        
+        // Stores the Node key for back navigation
+        let currentNodeKey = '';
 
         /**
          * Switches the view to display detailed plans for the selected node (Budget, Premium, Ultra) in Level 1 overlay.
          * @param {string} nodeKey - The key of the node (e.g., 'india').
          */
         function showPlans(nodeKey) {
+            currentNodeKey = nodeKey; // Save the node key
             const data = nodeData[nodeKey];
 
             if (!data) {
@@ -1329,9 +580,9 @@
                 return;
             }
             
-            // Hide Level 2 and Level 3 Overlays if visible
+            // Hide Level 2 Overlay and Level 3 Modal if visible
             subPlansOverlay.style.display = 'none';
-            paymentOverlay.style.display = 'none';
+            paymentModal.style.display = 'none';
 
             // 1. Update Level 1 header
             detailTitle.textContent = data.title;
@@ -1345,13 +596,13 @@
                     : `alertNotAvailable('${plan.name}')`;
                 
                 return `
-                    <div class="pricing-card animate-in">
-                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
-                            <h3 class="card-title">${plan.name}</h3>
-                            <span class="card-tag">${plan.tag}</span>
+                    <div class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer animate-in">
+                        <div class="flex-grow flex flex-col justify-center">
+                            <h3 class="text-2xl font-heading font-bold text-white mb-2">${plan.name}</h3>
+                            <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-secondary-accent text-gray-900 mb-6">${plan.tag}</span>
                         </div>
                         <div>
-                            <a href="#" onclick="${clickHandler}; return false;" class="futuristic-link-button button-accent" style="margin-top: 0;">VIEW</a>
+                            <a href="#" onclick="${clickHandler}; return false;" class="px-6 py-3 bg-primary text-white rounded-lg text-lg font-bold uppercase hover:bg-indigo-700 transition block">VIEW SPECS</a>
                         </div>
                     </div>
                 `;
@@ -1370,8 +621,6 @@
         
         /**
          * Switches the view to display detailed sub-plans (Plan 1-9) in Level 2 overlay.
-         * @param {string} nodeKey - The key of the node (e.g., 'india').
-         * @param {string} planName - The name of the main plan (e.g., 'BUDGET PLAN').
          */
         function showSubPlans(nodeKey, planName) {
             const node = nodeData[nodeKey];
@@ -1379,13 +628,9 @@
 
             if (!plan || !plan.subPlans || plan.subPlans.length === 0) {
                 alertNotAvailable(planName);
-                // Call showPlans for the current node to refresh the tier view
-                showPlans(nodeKey);
+                showPlans(nodeKey); 
                 return;
             }
-            
-            // Hide Level 3
-            paymentOverlay.style.display = 'none';
 
             // 1. Update Level 2 header and the back button's functionality
             subDetailTitle.textContent = `${planName} - DETAILED SPECS`;
@@ -1393,16 +638,17 @@
 
             // 2. Build the list of sub-plans
             subPlansContainer.innerHTML = plan.subPlans.map(subPlan => {
-                // Pass all necessary info to showPaymentScreen
+                const fullPlanName = `${node.title.split(' - ')[0]} | ${planName} | ${subPlan.name} (${subPlan.price})`;
                 return `
-                    <div class="sub-plan-item animate-in">
-                        <span class="plan-name">${subPlan.name}</span>
-                        <span class="plan-details-text">${subPlan.specs}</span>
-                        <span class="plan-price">${subPlan.price}</span>
-                        <button onclick="showPaymentScreen('${subPlan.name} (${planName})', '${subPlan.price}', '${nodeKey}', '${planName}'); return false;"
-                            class="futuristic-link-button button-accent sub-plan-buy-button">
-                            BUY NOW
-                        </button>
+                    <div class="sub-plan-item p-4 md:p-6 bg-gray-900 border border-primary/20 rounded-lg shadow-xl hover:shadow-primary/30 transition duration-300 transform hover:scale-[1.01] flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 animate-in">
+                        <div class="flex flex-col md:flex-row md:items-center md:space-x-4 w-full">
+                            <span class="plan-name text-lg font-heading font-bold text-secondary-accent min-w-[120px] text-left">${subPlan.name}</span>
+                            <span class="plan-details-text text-base text-gray-300 flex-grow text-left">${subPlan.specs}</span>
+                        </div>
+                        <div class="flex items-center space-x-4 w-full md:w-auto md:justify-end">
+                            <span class="plan-price text-lg font-heading font-bold text-primary-light whitespace-nowrap">${subPlan.price}</span>
+                            <button onclick="showPaymentModal('${fullPlanName}')" class="px-5 py-2 bg-primary text-white rounded-md text-sm font-bold uppercase hover:bg-indigo-700 transition w-full md:w-auto">BUY NOW</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1411,7 +657,7 @@
             let comingSoonMessage = '';
             if (planName === "ULTRA PLAN" && plan.subPlans.length > 0) {
                  comingSoonMessage = `
-                    <div style="margin-top: 30px; padding: 20px; font-size: 1.2rem; color: #FFC000; font-family: var(--font-heading); letter-spacing: 1px; border: 1px solid rgba(255, 192, 0, 0.3); border-radius: 8px; background: rgba(255, 192, 0, 0.05);">
+                    <div class="mt-8 p-4 bg-secondary-accent/10 border border-secondary-accent/50 rounded-lg text-lg font-heading font-bold text-secondary-accent">
                         MORE COMING SOON...
                     </div>
                 `;
@@ -1431,146 +677,76 @@
         }
 
         /**
-         * Shows the payment screen (Level 3 Overlay) with dynamic plan details.
-         * @param {string} subPlanName - The name of the specific plan (e.g., 'Plan 3 (BUDGET PLAN)').
-         * @param {string} price - The price of the plan.
-         * @param {string} nodeKey - The key of the node ('india', 'germany', etc.).
-         * @param {string} tierName - The name of the tier ('BUDGET PLAN', 'PREMIUM PLAN', etc.).
+         * Shows the payment modal (Level 3) with the selected plan details.
          */
-        function showPaymentScreen(subPlanName, price, nodeKey, tierName) {
-            // Build the dynamic HTML content for the payment box
-            const content = `
-                <div class="payment-box animate-in">
-                    <div class="payment-box-header">Complete Your Payment</div>
-                    
-                    <p class="payment-info-text">
-                        Aapne <strong>${subPlanName}</strong> plan chuna hai. Iska kul mulya hai: <strong>${price}</strong>.
-                        <br><br>
-                        Payment karne ke liye neeche di gayi **UPI ID** use karein. Payment hone ke baad, humare 
-                        <a href="${DISCORD_LINK}" target="_blank" style="color: var(--color-accent-cyan); text-decoration: underline;">Discord</a> 
-                        par payment ka screenshot ke saath ek ticket create karein.
-                    </p>
+        function showPaymentModal(fullPlanName) {
+            currentSelectedPlan = fullPlanName; // Store the full plan name
+            selectedPlanName.textContent = fullPlanName; // Display in modal
 
-                    <div class="upi-container">
-                        <span class="upi-id-text" id="upi-id-display">${UPI_ID}</span>
-                        <button class="copy-button" onclick="copyUPI()">COPY UPI ID</button>
-                    </div>
-                    
-                    <div class="payment-actions">
-                        <!-- Back to Plans button will return to the Level 2 Sub-Plans list -->
-                        <button onclick="showSubPlansAfterPayment('${nodeKey}', '${tierName}')" 
-                            class="futuristic-button button-secondary">
-                            ← BACK TO PLANS
-                        </button>
-                        <!-- Open Discord button -->
-                        <a href="${DISCORD_LINK}" target="_blank" 
-                            class="futuristic-button button-accent">
-                            OPEN DISCORD
-                        </a>
-                    </div>
-                </div>
-            `;
+            // Hide Level 2 and show Level 3
+            subPlansOverlay.style.display = 'none';
+            paymentModal.style.display = 'flex';
+        }
 
-            // Inject and show the overlay
-            paymentOverlay.innerHTML = content;
-            subPlansOverlay.style.display = 'none'; // Hide Level 2
-            paymentOverlay.style.display = 'flex'; // Show Level 3 (using flex for centering)
-            body.classList.add('overlay-active');
-            
-            // Scroll to top of the overlay
-            paymentOverlay.scrollTop = 0; 
-            
+        /**
+         * Hides the payment modal (Level 3) and returns to the sub-plans list (Level 2).
+         */
+        function hidePaymentModal() {
+            paymentModal.style.display = 'none';
+            // Re-display the sub-plans overlay.
+            subPlansOverlay.style.display = 'block';
+            subPlansOverlay.scrollTop = 0;
             setTimeout(runAnimations, 50); 
         }
-
+        
         /**
-         * Helper function to go back to sub-plans (Level 2) from payment screen.
+         * Copies the UPI ID to the clipboard and shows a temporary message box.
          */
-        function showSubPlansAfterPayment(nodeKey, tierName) {
-            paymentOverlay.style.display = 'none';
-            // Re-call showSubPlans to display the Level 2 list again
-            showSubPlans(nodeKey, tierName);
-        }
-
-        /**
-         * Copies the UPI ID to the clipboard.
-         */
-        function copyUPI() {
-            const upiText = document.getElementById('upi-id-display').textContent;
+        function copyUpiId() {
+            const upiId = document.getElementById('upi-id-text').textContent;
+            
+            // Use execCommand('copy') for better compatibility in iframe environments
             const tempInput = document.createElement('input');
-            tempInput.value = upiText;
             document.body.appendChild(tempInput);
+            tempInput.setAttribute('value', upiId);
             tempInput.select();
-            try {
-                // Using document.execCommand('copy') for iFrame compatibility
-                document.execCommand('copy');
-                showCustomMessage('UPI ID Copied!');
-            } catch (err) {
-                console.error('Could not copy text: ', err);
-                showCustomMessage('Copy failed.');
-            }
+            document.execCommand('copy');
             document.body.removeChild(tempInput);
+
+            // Show confirmation message (using the existing alertNotAvailable style)
+            const message = "UPI ID Copied: sushantlite@fam"; 
+             
+            const msgBox = document.createElement('div');
+            msgBox.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #1A1A2A; color: #00FCE3;
+                padding: 20px 30px; border-radius: 8px; border: 2px solid #00FCE3;
+                box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); z-index: 3000; font-family: 'Orbitron', sans-serif;
+                font-size: 1.2rem; font-weight: bold; text-align: center; max-width: 90vw;
+            `;
+            msgBox.textContent = message;
+            document.body.appendChild(msgBox);
+
+            setTimeout(() => {
+                if(document.body.contains(msgBox)) {
+                   document.body.removeChild(msgBox);
+                }
+            }, 1800); 
         }
 
-        /**
-         * Shows a custom message box at the top right corner.
-         */
-        function showCustomMessage(message) {
-             // Check if custom message style is already added to avoid duplication
-             if (!document.getElementById('custom-msg-style')) {
-                const style = document.createElement('style');
-                style.id = 'custom-msg-style';
-                style.innerHTML = `
-                    @keyframes slideIn {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                    @keyframes slideOut {
-                        from { transform: translateX(0); opacity: 1; }
-                        to { transform: translateX(100%); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-             }
-
-             const msgBox = document.createElement('div');
-             msgBox.style.cssText = `
-                 position: fixed; top: 20px; right: 20px; 
-                 background: #1A1A1A; color: #fff;
-                 padding: 10px 20px; border-radius: 5px; 
-                 border: 2px solid ${getComputedStyle(document.documentElement).getPropertyValue('--color-accent-cyan')};
-                 box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); z-index: 5000; 
-                 font-family: var(--font-body); font-size: 1rem; font-weight: bold;
-                 animation: slideIn 0.3s forwards;
-             `;
-             msgBox.textContent = message;
-             document.body.appendChild(msgBox);
-
-             setTimeout(() => {
-                 msgBox.style.animation = 'slideOut 0.3s forwards';
-                 setTimeout(() => {
-                     if(document.body.contains(msgBox)) {
-                        document.body.removeChild(msgBox);
-                     }
-                 }, 300); 
-             }, 2000);
-        }
 
         /**
          * Shows a custom message box when plans are not available (since alert() is forbidden).
-         * @param {string} planName - The name of the plan that is unavailable.
          */
         function alertNotAvailable(planName) {
-             // Requested message: COMING SOON (in English)
-             const message = `COMING SOON`; 
+             const message = `COMING SOON: ${planName}`; 
              
-             // Simple message box display (using a fixed position div since alert() is forbidden)
              const msgBox = document.createElement('div');
              msgBox.style.cssText = `
                  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                 background: #333; color: ${getComputedStyle(document.documentElement).getPropertyValue('--color-accent-cyan')};
-                 padding: 25px 40px; border-radius: 10px; border: 2px solid ${getComputedStyle(document.documentElement).getPropertyValue('--color-accent-cyan')};
-                 box-shadow: 0 0 20px rgba(0, 252, 227, 0.7); z-index: 2000; font-family: var(--font-heading);
+                 background: #1A1A2A; color: #FFC000;
+                 padding: 25px 40px; border-radius: 10px; border: 2px solid #FFC000;
+                 box-shadow: 0 0 20px rgba(255, 192, 0, 0.7); z-index: 2000; font-family: 'Orbitron', sans-serif;
                  font-size: 1.5rem; font-weight: bold; text-align: center; max-width: 90vw;
                  letter-spacing: 2px;
              `;
@@ -1590,10 +766,9 @@
         function showMainNodes() {
             plansOverlay.style.display = 'none';
             subPlansOverlay.style.display = 'none';
-            paymentOverlay.style.display = 'none'; // Hide Level 3 too
+            paymentModal.style.display = 'none';
             body.classList.remove('overlay-active');
 
-            // Scroll the main document back to the pricing section (optional, but good UX)
             document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1609,31 +784,65 @@
             };
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
-                    // Only trigger animation if element is not already visible
                     if (entry.isIntersecting && !entry.target.classList.contains('is-visible')) {
                         entry.target.classList.add('is-visible');
                     }
                 });
             }, observerOptions);
 
-            // Select all animated elements in the current view
             document.querySelectorAll('.animate-in').forEach(element => {
-                // Remove visible class only if we are in an overlay (to re-animate)
-                if (element.closest('#plans-overlay') || element.closest('#sub-plans-overlay') || element.closest('#payment-overlay')) {
+                // Remove visible class only if we are in an overlay (to re-animate when the overlay shows)
+                if (element.closest('#plans-overlay') || element.closest('#sub-plans-overlay')) {
                      element.classList.remove('is-visible'); 
                 }
                 observer.observe(element);
             });
+            
+            // Make header visible only after all content has loaded
+            document.getElementById('header').classList.add('is-visible');
         }
         
-        // Initial setup for scroll animations
-        document.addEventListener('DOMContentLoaded', runAnimations);
+        // CSS for Animate-in functionality (Added here for self-contained file)
+        const animationStyle = document.createElement('style');
+        animationStyle.textContent = `
+            .animate-in {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+
+            .animate-in.delay-1 { transition-delay: 0.1s; }
+            .animate-in.delay-2 { transition-delay: 0.2s; }
+            .animate-in.delay-3 { transition-delay: 0.3s; }
+            .animate-in.delay-4 { transition-delay: 0.4s; }
+            .animate-in.delay-5 { transition-delay: 0.5s; }
+
+            .is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        `;
+        document.head.appendChild(animationStyle);
+
         
-        // Ensure that clicking on the main link initially shows the plans overlay
-        document.querySelector('a[href="#pricing"]').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        // Initial setup for scroll animations and navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            runAnimations();
+            
+            // Smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        document.querySelector(targetId).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
         });
+
     </script>
 </body>
 </html>
