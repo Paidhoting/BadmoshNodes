@@ -743,18 +743,18 @@
          * to open the choice of payment applications.
          */
         function initiateUpiPayment() {
+            // Amount ko extract aur format karna
             const priceValue = extractPriceValue(currentSelectedPrice);
-            const amount = priceValue.toFixed(2); // Format amount to two decimal places
+            const amount = priceValue.toFixed(2); // Amount do decimal places tak format kiya
+
             const txnId = 'T' + Date.now(); // Generate a unique transaction ID
             
-            // Generate UPI Intent URL (Deep Link)
-            // upi://pay?pa=UPI_ID&pn=PAYEE_NAME&mc=MERCHANT_CODE&tid=TRANSACTION_ID&tr=REFERENCE_ID&am=AMOUNT&cu=INR&url=POST_PAYMENT_URL
+            // UPI Intent URL generate karna, jismein 'am' parameter mein amount set kiya gaya hai.
             const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(TRANSACTION_NOTE)}&tid=${txnId}`;
 
             console.log("Attempting UPI Deep Link:", upiUrl);
             
             // Redirect the user to the UPI intent URL
-            // This will open the native UPI apps on Android/iOS
             window.location.href = upiUrl;
 
             // Show a temporary message to guide the user
