@@ -36,7 +36,7 @@
         }
     </script>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght=300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     
     <!-- Custom styles for non-Tailwind elements and structure -->
     <style>
@@ -137,6 +137,27 @@
             transform: translateY(0);
             opacity: 1;
         }
+        
+        /* Custom Message Box Style */
+        .custom-message-box {
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            background: #1A1A2A; 
+            color: #00FCE3;
+            padding: 20px 30px; 
+            border-radius: 8px; 
+            border: 2px solid #00FCE3;
+            box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); 
+            z-index: 3000; 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            text-align: center; 
+            max-width: 90vw;
+        }
+
     </style>
 </head>
 <body class="bg-bg-dark text-gray-200 font-body">
@@ -404,7 +425,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 48 48" fill="none">
                         <path d="M24 0C10.745 0 0 10.745 0 24C0 37.255 10.745 48 24 48C37.255 48 48 37.255 48 24C48 10.745 37.255 0 24 0ZM28.8 33.6H19.2V30H28.8V33.6ZM28.8 24.6H19.2V21H28.8V24.6ZM28.8 15.6H19.2V12H28.8V15.6Z" fill="#fff"/>
                     </svg>
-                    PAY NOW (Mobile Only)
+                    PAY NOW (Try App Open)
                 </button>
                 
                 <!-- Other Buttons -->
@@ -418,7 +439,7 @@
 
             <!-- Important Instructions -->
             <p class="text-sm text-primary-light font-semibold mt-6">
-                Once paid create a ticket on our <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="text-secondary-accent hover:underline">Discord</a> with your payment screenshot.
+                **IMPORTANT:** Agar payment app automatically open na ho, toh UPI ID copy karein aur manually pay karein. Payment ke baad <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="text-secondary-accent hover:underline">Discord</a> par screenshot ke saath ticket banaein.
             </p>
         </div>
     </div>
@@ -627,7 +648,7 @@
                 // Determine the function call based on whether subPlans exist
                 const clickHandler = plan.subPlans && plan.subPlans.length > 0 
                     ? `showSubPlans('${nodeKey}', '${plan.name}')` 
-                    : `alertNotAvailable('${plan.name}')`;
+                    : `alertNotAvailable('${plan.name} plans are coming soon for this node.')`; // Updated message
                 
                 return `
                     <div class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer animate-in">
@@ -661,7 +682,7 @@
             const plan = node.plans.find(p => p.name === planName);
 
             if (!plan || !plan.subPlans || plan.subPlans.length === 0) {
-                alertNotAvailable(planName);
+                alertNotAvailable(`${planName} plans are coming soon for this node.`); // Updated message
                 showPlans(nodeKey); 
                 return;
             }
@@ -739,8 +760,7 @@
         }
 
         /**
-         * Initiates UPI payment via intent link. This is specifically for mobile devices
-         * to open the choice of payment applications.
+         * Initiates UPI payment via intent link and provides user feedback.
          */
         function initiateUpiPayment() {
             // Amount ko extract aur format karna
@@ -754,11 +774,33 @@
 
             console.log("Attempting UPI Deep Link:", upiUrl);
             
-            // Redirect the user to the UPI intent URL
+            // 1. Attempt the deep link redirection immediately
             window.location.href = upiUrl;
 
-            // Show a temporary message to guide the user
-            alertNotAvailable("Opening UPI App... Please complete payment there.");
+            // 2. Show a temporary message to guide the user if the deep link fails.
+            const message = "Opening UPI App... If it doesn't open automatically, please copy the ID and pay manually."; 
+            const textColor = '#00FCE3';
+            const borderColor = '#00FCE3';
+            const shadowColor = 'rgba(0, 252, 227, 0.7)';
+
+            const msgBox = document.createElement('div');
+            msgBox.className = 'custom-message-box';
+            msgBox.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #1A1A2A; color: ${textColor};
+                padding: 20px 30px; border-radius: 8px; border: 2px solid ${borderColor};
+                box-shadow: 0 0 15px ${shadowColor}; z-index: 3000; font-family: 'Orbitron', sans-serif;
+                font-size: 1.2rem; font-weight: bold; text-align: center; max-width: 90vw;
+            `;
+            msgBox.textContent = message;
+            document.body.appendChild(msgBox);
+
+            // Remove the message after 4 seconds
+            setTimeout(() => {
+                if(document.body.contains(msgBox)) {
+                   document.body.removeChild(msgBox);
+                }
+            }, 4000); 
         }
         
         /**
@@ -775,17 +817,11 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            // Show confirmation message (using the existing alertNotAvailable style)
+            // Show confirmation message (using the custom message box style)
             const message = "UPI ID Copied: sushantlite@fam"; 
              
             const msgBox = document.createElement('div');
-            msgBox.style.cssText = `
-                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                background: #1A1A2A; color: #00FCE3;
-                padding: 20px 30px; border-radius: 8px; border: 2px solid #00FCE3;
-                box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); z-index: 3000; font-family: 'Orbitron', sans-serif;
-                font-size: 1.2rem; font-weight: bold; text-align: center; max-width: 90vw;
-            `;
+            msgBox.className = 'custom-message-box';
             msgBox.textContent = message;
             document.body.appendChild(msgBox);
 
@@ -800,10 +836,10 @@
         /**
          * Shows a custom message box when plans are not available or for status messages.
          */
-        function alertNotAvailable(message, isAlert=true) {
-             const textColor = isAlert ? '#FFC000' : '#00FCE3';
-             const borderColor = isAlert ? '#FFC000' : '#00FCE3';
-             const shadowColor = isAlert ? 'rgba(255, 192, 0, 0.7)' : 'rgba(0, 252, 227, 0.7)';
+        function alertNotAvailable(message) {
+             const textColor = '#FFC000';
+             const borderColor = '#FFC000';
+             const shadowColor = 'rgba(255, 192, 0, 0.7)';
 
              const msgBox = document.createElement('div');
              msgBox.style.cssText = `
@@ -821,7 +857,7 @@
                  if(document.body.contains(msgBox)) {
                     document.body.removeChild(msgBox);
                  }
-             }, isAlert ? 2000 : 3000); // Keep status messages a bit longer
+             }, 2000); 
         }
 
         /**
