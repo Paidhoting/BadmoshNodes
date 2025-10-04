@@ -18,7 +18,6 @@
                         'bg-dark': '#0F0F1A', 
                         'bg-card': '#1A1A2A', 
                         'secondary-accent': '#FFC000', // Gold/Yellow
-                        'upi-green': '#32A852', // UPI Pay Now color
                     },
                     fontFamily: {
                         heading: ['Orbitron', 'sans-serif'],
@@ -137,27 +136,6 @@
             transform: translateY(0);
             opacity: 1;
         }
-        
-        /* Custom Message Box Style */
-        .custom-message-box {
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%);
-            background: #1A1A2A; 
-            color: #00FCE3;
-            padding: 20px 30px; 
-            border-radius: 8px; 
-            border: 2px solid #00FCE3;
-            box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); 
-            z-index: 3000; 
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            text-align: center; 
-            max-width: 90vw;
-        }
-
     </style>
 </head>
 <body class="bg-bg-dark text-gray-200 font-body">
@@ -417,30 +395,20 @@
                 </div>
             </div>
 
-            <!-- Action Buttons for Payment -->
-            <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <!-- NEW PAY NOW BUTTON: Triggers UPI App Intent on Mobile -->
-                <button onclick="initiateUpiPayment()" id="pay-now-button" class="px-6 py-3 rounded-lg font-bold uppercase bg-upi-green text-white transition duration-300 hover:bg-green-700 focus:outline-none flex items-center justify-center">
-                     <!-- UPI Icon (Inline SVG for clean look) -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 48 48" fill="none">
-                        <path d="M24 0C10.745 0 0 10.745 0 24C0 37.255 10.745 48 24 48C37.255 48 48 37.255 48 24C48 10.745 37.255 0 24 0ZM28.8 33.6H19.2V30H28.8V33.6ZM28.8 24.6H19.2V21H28.8V24.6ZM28.8 15.6H19.2V12H28.8V15.6Z" fill="#fff"/>
-                    </svg>
-                    PAY NOW (Try App Open)
-                </button>
-                
-                <!-- Other Buttons -->
+            <!-- Important Instructions -->
+            <p class="text-base text-primary-light font-semibold mb-6">
+                Once paid create a ticket on our <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="text-secondary-accent hover:underline">Discord</a> with your payment screenshot.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4">
                 <button onclick="hidePaymentModal()" class="px-6 py-2 rounded-lg font-bold uppercase border-2 border-primary text-primary-light bg-transparent transition duration-300 hover:bg-primary/20 focus:outline-none">
-                    ← GO BACK
+                    ← GO BACK TO PLANS
                 </button>
                 <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="px-6 py-2 rounded-lg font-bold uppercase bg-primary text-white transition duration-300 hover:bg-indigo-700 hover:shadow-glow focus:outline-none">
                     JOIN DISCORD
                 </a>
             </div>
-
-            <!-- Important Instructions -->
-            <p class="text-sm text-primary-light font-semibold mt-6">
-                **IMPORTANT:** Agar payment app automatically open na ho, toh UPI ID copy karein aur manually pay karein. Payment ke baad <a href="https://discord.com/invite/3Dxx7MeNTp" target="_blank" class="text-secondary-accent hover:underline">Discord</a> par screenshot ke saath ticket banaein.
-            </p>
         </div>
     </div>
 
@@ -593,34 +561,11 @@
         
         const body = document.body;
 
-        // Stores the name of the currently selected plan
+        // Stores the name of the currently selected plan for the payment modal to use
         let currentSelectedPlan = '';
-        // Stores the price of the currently selected plan (needed for UPI Intent)
-        let currentSelectedPrice = ''; 
         
         // Stores the Node key for back navigation
         let currentNodeKey = '';
-
-        // UPI Details (Centralized)
-        const UPI_ID = "sushantlite@fam";
-        const PAYEE_NAME = "Badmosh Nodes";
-        const TRANSACTION_NOTE = "BadmoshNodesPlanPurchase";
-
-
-        /**
-         * Extracts the numerical price (in Rupees) from a price string (e.g., "₹45/mo" -> 45).
-         * Returns 1 if extraction fails or price is unavailable.
-         * @param {string} priceString - The price string like "₹1299/mo".
-         * @returns {number} The numerical price.
-         */
-        function extractPriceValue(priceString) {
-            if (!priceString) return 1;
-            // Remove '₹', '/mo', and any non-digit characters except the dot/comma (not used here)
-            const numericPart = priceString.replace('₹', '').replace('/mo', '').trim();
-            const value = parseFloat(numericPart);
-            return isNaN(value) ? 1 : value;
-        }
-
 
         /**
          * Switches the view to display detailed plans for the selected node (Budget, Premium, Ultra) in Level 1 overlay.
@@ -648,7 +593,7 @@
                 // Determine the function call based on whether subPlans exist
                 const clickHandler = plan.subPlans && plan.subPlans.length > 0 
                     ? `showSubPlans('${nodeKey}', '${plan.name}')` 
-                    : `alertNotAvailable('${plan.name} plans are coming soon for this node.')`; // Updated message
+                    : `alertNotAvailable('${plan.name}')`;
                 
                 return `
                     <div class="pricing-card bg-bg-card p-8 rounded-xl border-2 border-primary/30 shadow-xl shadow-black/50 hover:shadow-card-hover transition duration-500 transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer animate-in">
@@ -682,7 +627,7 @@
             const plan = node.plans.find(p => p.name === planName);
 
             if (!plan || !plan.subPlans || plan.subPlans.length === 0) {
-                alertNotAvailable(`${planName} plans are coming soon for this node.`); // Updated message
+                alertNotAvailable(planName);
                 showPlans(nodeKey); 
                 return;
             }
@@ -694,7 +639,6 @@
             // 2. Build the list of sub-plans
             subPlansContainer.innerHTML = plan.subPlans.map(subPlan => {
                 const fullPlanName = `${node.title.split(' - ')[0]} | ${planName} | ${subPlan.name} (${subPlan.price})`;
-                // Store price and name as data attributes for easy access in showPaymentModal
                 return `
                     <div class="sub-plan-item p-4 md:p-6 bg-gray-900 border border-primary/20 rounded-lg shadow-xl hover:shadow-primary/30 transition duration-300 transform hover:scale-[1.01] flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 animate-in">
                         <div class="flex flex-col md:flex-row md:items-center md:space-x-4 w-full">
@@ -703,7 +647,7 @@
                         </div>
                         <div class="flex items-center space-x-4 w-full md:w-auto md:justify-end">
                             <span class="plan-price text-lg font-heading font-bold text-primary-light whitespace-nowrap">${subPlan.price}</span>
-                            <button onclick="showPaymentModal('${fullPlanName}', '${subPlan.price}')" class="px-5 py-2 bg-primary text-white rounded-md text-sm font-bold uppercase hover:bg-indigo-700 transition w-full md:w-auto">BUY NOW</button>
+                            <button onclick="showPaymentModal('${fullPlanName}')" class="px-5 py-2 bg-primary text-white rounded-md text-sm font-bold uppercase hover:bg-indigo-700 transition w-full md:w-auto">BUY NOW</button>
                         </div>
                     </div>
                 `;
@@ -734,13 +678,9 @@
 
         /**
          * Shows the payment modal (Level 3) with the selected plan details.
-         * @param {string} fullPlanName - The detailed name of the plan selected.
-         * @param {string} price - The price of the plan, e.g., "₹120/mo".
          */
-        function showPaymentModal(fullPlanName, price) {
+        function showPaymentModal(fullPlanName) {
             currentSelectedPlan = fullPlanName; // Store the full plan name
-            currentSelectedPrice = price; // Store the price
-            
             selectedPlanName.textContent = fullPlanName; // Display in modal
 
             // Hide Level 2 and show Level 3
@@ -758,50 +698,6 @@
             subPlansOverlay.scrollTop = 0;
             setTimeout(runAnimations, 50); 
         }
-
-        /**
-         * Initiates UPI payment via intent link and provides user feedback.
-         */
-        function initiateUpiPayment() {
-            // Amount ko extract aur format karna
-            const priceValue = extractPriceValue(currentSelectedPrice);
-            const amount = priceValue.toFixed(2); // Amount do decimal places tak format kiya
-
-            const txnId = 'T' + Date.now(); // Generate a unique transaction ID
-            
-            // UPI Intent URL generate karna, jismein 'am' parameter mein amount set kiya gaya hai.
-            const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(TRANSACTION_NOTE)}&tid=${txnId}`;
-
-            console.log("Attempting UPI Deep Link:", upiUrl);
-            
-            // 1. Attempt the deep link redirection immediately
-            window.location.href = upiUrl;
-
-            // 2. Show a temporary message to guide the user if the deep link fails.
-            const message = "Opening UPI App... If it doesn't open automatically, please copy the ID and pay manually."; 
-            const textColor = '#00FCE3';
-            const borderColor = '#00FCE3';
-            const shadowColor = 'rgba(0, 252, 227, 0.7)';
-
-            const msgBox = document.createElement('div');
-            msgBox.className = 'custom-message-box';
-            msgBox.style.cssText = `
-                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                background: #1A1A2A; color: ${textColor};
-                padding: 20px 30px; border-radius: 8px; border: 2px solid ${borderColor};
-                box-shadow: 0 0 15px ${shadowColor}; z-index: 3000; font-family: 'Orbitron', sans-serif;
-                font-size: 1.2rem; font-weight: bold; text-align: center; max-width: 90vw;
-            `;
-            msgBox.textContent = message;
-            document.body.appendChild(msgBox);
-
-            // Remove the message after 4 seconds
-            setTimeout(() => {
-                if(document.body.contains(msgBox)) {
-                   document.body.removeChild(msgBox);
-                }
-            }, 4000); 
-        }
         
         /**
          * Copies the UPI ID to the clipboard and shows a temporary message box.
@@ -817,11 +713,17 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            // Show confirmation message (using the custom message box style)
+            // Show confirmation message (using the existing alertNotAvailable style)
             const message = "UPI ID Copied: sushantlite@fam"; 
              
             const msgBox = document.createElement('div');
-            msgBox.className = 'custom-message-box';
+            msgBox.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #1A1A2A; color: #00FCE3;
+                padding: 20px 30px; border-radius: 8px; border: 2px solid #00FCE3;
+                box-shadow: 0 0 15px rgba(0, 252, 227, 0.7); z-index: 3000; font-family: 'Orbitron', sans-serif;
+                font-size: 1.2rem; font-weight: bold; text-align: center; max-width: 90vw;
+            `;
             msgBox.textContent = message;
             document.body.appendChild(msgBox);
 
@@ -834,19 +736,17 @@
 
 
         /**
-         * Shows a custom message box when plans are not available or for status messages.
+         * Shows a custom message box when plans are not available (since alert() is forbidden).
          */
-        function alertNotAvailable(message) {
-             const textColor = '#FFC000';
-             const borderColor = '#FFC000';
-             const shadowColor = 'rgba(255, 192, 0, 0.7)';
-
+        function alertNotAvailable(planName) {
+             const message = `COMING SOON: ${planName}`; 
+             
              const msgBox = document.createElement('div');
              msgBox.style.cssText = `
                  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                 background: #1A1A2A; color: ${textColor};
-                 padding: 25px 40px; border-radius: 10px; border: 2px solid ${borderColor};
-                 box-shadow: 0 0 20px ${shadowColor}; z-index: 2000; font-family: 'Orbitron', sans-serif;
+                 background: #1A1A2A; color: #FFC000;
+                 padding: 25px 40px; border-radius: 10px; border: 2px solid #FFC000;
+                 box-shadow: 0 0 20px rgba(255, 192, 0, 0.7); z-index: 2000; font-family: 'Orbitron', sans-serif;
                  font-size: 1.5rem; font-weight: bold; text-align: center; max-width: 90vw;
                  letter-spacing: 2px;
              `;
@@ -946,3 +846,4 @@
     </script>
 </body>
 </html>
+
